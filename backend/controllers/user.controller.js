@@ -15,7 +15,8 @@ const register=async (req,res) => {
             })
         }
 
-        const user= await User.findOne({email}) 
+        const user= await User.findOne({email}) || await User.findOne({username}) 
+        console.log(user)
         if(user){
             return res.status(401).json({
                 success:false,
@@ -44,16 +45,17 @@ const register=async (req,res) => {
 
 const login =async (req,res) => {
     try {
-        let {email,password}=req.body;
-        if(!email || !password){
+        let {usernameEmail,password}=req.body;
+        if(!usernameEmail || !password){
             return res.status(401).json({
                 success:false,
                 message:'Some details are missing !!'
             })
         }
-        const user= await User.findOne({email})
+        const user= await User.findOne({email:usernameEmail}) || await User.findOne({username:usernameEmail})
         .populate('posts')
-        .select('-password')
+        // .select('-password')
+        // console.log(user)
         if(!user){
             return res.status(401).json({
                 success:false,
@@ -67,6 +69,7 @@ const login =async (req,res) => {
                 message:'Incorrect Password !!'
             })
         }
+        user.password=null;
     //    let { password:pw, ...userData } = user._doc;
         // user={
         //     userId:user._id,
@@ -92,7 +95,6 @@ const login =async (req,res) => {
             message: 'Server Error !!'
         });
     }
-    
 }
 
 const logout=async (req,res) => {

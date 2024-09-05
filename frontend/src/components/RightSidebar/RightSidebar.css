@@ -1,0 +1,10 @@
+.rightSidebar{
+    position: fixed;
+    right: 0;
+}
+
+@media only screen and (max-width: 767px) {
+    .rightSidebar{
+        display: none;
+    }
+  }

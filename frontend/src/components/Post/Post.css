@@ -1,0 +1,156 @@
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
+.postCard {
+    display: flex;
+    flex-direction: column;
+    height: max-content;
+    width: max-content;
+    border: 2px solid black;
+    border-radius: 1rem;
+    padding: 0.5rem;
+}
+
+.postCard i {
+    padding: 0.2rem;
+    cursor: pointer;
+}
+.postButtons i:hover{
+   background-color:black;
+   color: white;
+   border-radius: 0.5rem;
+}
+
+.postPhoto img {
+    height: 45vh;
+    width: 25vw;
+}
+
+.postButtons {
+    display: flex;
+    border-top: 1px solid black;
+    padding-top: 0.3rem;
+    font-size: 1.5rem;
+    justify-content: space-between;
+}
+
+.postCardLeft {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+}
+
+.postCardRight {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+}
+
+.userInfo {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid black;
+}
+
+.userInfo .postCardLeft {
+    justify-content: flex-start; 
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.authorUsername {
+    font-family: 'Pacifico' !important;
+    transform: scale(1.3);
+    margin-left: 0.5rem;
+}
+
+.authorImg img {
+    border-radius: 50%;
+    border: 2px solid black;
+    height: 1.5rem;
+    width: 1.5rem;
+}
+
+.dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255,0.95); 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000; /* Ensures the dialog appears above other content */
+}
+.dialogBox{
+    border: 2px solid black;
+    border-radius: 1rem;
+    gap: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    padding: 1.5rem;
+}
+.dialogItem {
+    cursor: pointer;
+    text-align: center;
+    padding: 0.3rem;
+    font-weight: 600;
+}
+
+
+
+.dialogItem:hover {
+    border-radius: 0.5rem;
+    background-color: #0000000D;
+}
+.createComment{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.createComment input{
+    margin-top: 0.3rem;
+    border: none;
+    width: 16vw;
+    border-bottom:2px solid black ;
+}
+.postCommentBtn{
+    /* padding-right: 0.2rem; */
+    background-color: #0095F6;
+    font-weight: bold;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 0.5rem;
+
+}
+.likeCount,.caption,.allComments{
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+.likeCount{
+    font-weight: 600;
+}
+.allComments{
+    cursor: pointer;
+}
+.caption{
+    font-family: 'Pacifico';
+}
+.caption span{
+    font-family: 'Pacifico';
+    font-size: 1.1rem;
+}
+@media only screen and (max-width: 767px) {
+    .postPhoto img {
+        height: 35vh;
+        width: 80vw;
+        /* max-width: 400px; */
+    }
+    
+   .createComment input{
+    width: 58vw;
+   }
+}

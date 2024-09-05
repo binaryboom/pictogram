@@ -3,6 +3,7 @@ import cloudinary from "../utils/cloudinary.js"
 import Post from '../models/post.model.js'
 import User from '../models/user.model.js'
 import Comment from '../models/comment.model.js'
+import mongoose from "mongoose";
 
 const handleError = (res, statusCode, message) => {
     return res.status(statusCode).json({
@@ -11,41 +12,41 @@ const handleError = (res, statusCode, message) => {
     });
 };
 
-const createPost = async (req,res) => {
+const createPost = async (req, res) => {
     try {
-        const caption =req.body.caption;
-        const image=req.file;
-        const authorId=req.id;
+        const caption = req.body.caption;
+        const image = req.file;
+        const authorId = req.id;
 
-        if (!image){
+        if (!image) {
             return res.status(401).json({
-                success:false,
-                message:'Image required !!'
+                success: false,
+                message: 'Image required !!'
             })
         }
         // optimizing image quality and size
-        const optimizedImageBuffer= await sharp(image.buffer)
-        .resize({height:800,width:800,fit:'inside'})
-        .toFormat('jpeg',{quality:80})
-        .toBuffer()
-        
-        const fileUri=`data:image/jpeg;base64,${optimizedImageBuffer.toString('base64')}`;
-        const cloudResp=await cloudinary.uploader.upload(fileUri)
+        const optimizedImageBuffer = await sharp(image.buffer)
+            .resize({ height: 800, width: 800, fit: 'inside' })
+            .toFormat('jpeg', { quality: 80 })
+            .toBuffer()
+
+        const fileUri = `data:image/jpeg;base64,${optimizedImageBuffer.toString('base64')}`;
+        const cloudResp = await cloudinary.uploader.upload(fileUri)
 
         const post = await Post.create({
-            author:authorId,
+            author: authorId,
             caption,
-            image:cloudResp.secure_url
+            image: cloudResp.secure_url
         })
-        if (!post){
+        if (!post) {
             return res.status(401).json({
-                success:false,
-                message:'Unable to create post , please retry !!'
+                success: false,
+                message: 'Unable to create post , please retry !!'
             })
         }
-        
-        const user= await User.findById(authorId);
-        if(!user){
+
+        const user = await User.findById(authorId);
+        if (!user) {
             return res.status(404).json({
                 success: false,
                 message: 'User not found !!'
@@ -58,10 +59,10 @@ const createPost = async (req,res) => {
         //     handleError(res,400,'Unable to save post , please retry !!')
         // })
 
-        await post.populate({path:'author',select:'-password'});
+        await post.populate({ path: 'author', select: '-password' });
         return res.status(200).json({
-            success:true,
-            message:'Post created successfully !!',
+            success: true,
+            message: 'Post created successfully !!',
             post
         })
 
@@ -74,13 +75,13 @@ const createPost = async (req,res) => {
     }
 }
 
-const getAllPosts = async (req,res) => {
+const getAllPosts = async (req, res) => {
     try {
-        const allPosts=await Post.find().sort({createdAt:-1})
-        .populate({path:'author',select:'username,profilePicture'})
-        .populate({path:'comments',select:'username,profilePicture'})
+        const allPosts = await Post.find().sort({ createdAt: -1 })
+            .populate({ path: 'author', select: 'username profilePicture' })
+            .populate({ path: 'comments', select: 'username profilePicture' })
         return res.status(200).json({
-            success:true,
+            success: true,
             allPosts
         })
     } catch (error) {
@@ -92,14 +93,14 @@ const getAllPosts = async (req,res) => {
     }
 }
 
-const getPostByUser = async (req,res) => {
+const getPostByUser = async (req, res) => {
     try {
-        const authorId=req.id;
-        const allPosts=await Post.find({author:authorId}).sort({createdAt:-1})
-        .populate({path:'author',select:'username,profilePicture'})
-        .populate({path:'comments',select:'username,profilePicture'})
+        const authorId = req.id;
+        const allPosts = await Post.find({ author: authorId }).sort({ createdAt: -1 })
+            .populate({ path: 'author', select: 'username profilePicture' })
+            .populate({ path: 'comments', select: 'username profilePicture' })
         return res.status(200).json({
-            success:true,
+            success: true,
             allPosts
         })
     } catch (error) {
@@ -110,25 +111,106 @@ const getPostByUser = async (req,res) => {
         });
     }
 }
-
-const likePost=async (req,res)=>{
+const getPostById = async (req, res) => {
     try {
-        const mainUser=req.id; 
-        const postId=req.params.id;
-        const post=await Post.findById(postId)
-        if (!post){
+        const postId = req.params.id;
+        if (!mongoose.Types.ObjectId.isValid(postId)) {
+            return res.status(404).json({
+                success: false,
+                message: 'Post not found !!'
+            });
+        }
+        const post = await Post.findOne({ _id: postId })
+            .populate({ path: 'author', select: 'username profilePicture' })
+            .populate({ path: 'comments', select: 'username profilePicture' })
+
+        if (!post) {
+            return res.status(404).json({
+                success: false,
+                message: 'Post not found !!'
+            });
+        }
+        return res.status(200).json({
+            success: true,
+            post
+        })
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            success: false,
+            message: 'Server Error !!'
+        });
+    }
+}
+
+const likeUnlike = async (req, res) => {
+    try {
+        const mainUserId = req.id;
+        const postId = req.params.id;
+
+        const mainUser = await User.findById(mainUserId);
+        const post = await Post.findById(postId)
+        if (!post) {
             return res.status(404).json({
                 success: false,
                 message: 'Post not found !!'
             });
         }
 
-        await post.updateOne({$addToSet:{likes:mainUser}})
+        if (!mainUser) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found !!'
+            });
+        }
+
+        const isLiked = post.likes.includes(mainUserId);
+        if (isLiked) {
+            // doUnlike
+            await post.updateOne({ $pull: { likes: mainUserId } })
+            return res.status(200).json({
+                success: true,
+                message: 'Post unliked successfully !!'
+            });
+        }
+        else {
+            // do Like
+            await post.updateOne({ $addToSet: { likes: mainUserId } })
+            return res.status(200).json({
+                success: true,
+                message: 'Post liked successfully !!'
+            });
+        }
+
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json({
+            success: false,
+            message: 'Server Error !!'
+        });
+
+    }
+}
+
+const likePost = async (req, res) => {
+    try {
+        const mainUser = req.id;
+        const postId = req.params.id;
+        const post = await Post.findById(postId)
+        if (!post) {
+            return res.status(404).json({
+                success: false,
+                message: 'Post not found !!'
+            });
+        }
+
+        await post.updateOne({ $addToSet: { likes: mainUser } })
         return res.status(200).json({
             success: true,
             message: 'Post liked successfully !!'
         });
-        
+
     } catch (error) {
         console.log(error)
         return res.status(500).json({
@@ -138,24 +220,24 @@ const likePost=async (req,res)=>{
     }
 }
 
-const unlikePost=async (req,res)=>{
+const unlikePost = async (req, res) => {
     try {
-        const mainUser=req.id; 
-        const postId=req.params.id;
-        const post=await Post.findById(postId)
-        if (!post){
+        const mainUser = req.id;
+        const postId = req.params.id;
+        const post = await Post.findById(postId)
+        if (!post) {
             return res.status(404).json({
                 success: false,
                 message: 'Post not found !!'
             });
         }
 
-        await post.updateOne({$pull:{likes:mainUser}})
+        await post.updateOne({ $pull: { likes: mainUser } })
         return res.status(200).json({
             success: true,
             message: 'Post unliked successfully !!'
         });
-        
+
     } catch (error) {
         console.log(error)
         return res.status(500).json({
@@ -165,24 +247,24 @@ const unlikePost=async (req,res)=>{
     }
 }
 
-const addComment=async (req,res) => {
+const addComment = async (req, res) => {
     try {
-        const postId=req.params.id;
-        const mainUser=req.id;
-        const text=req.body.text;
-        if(!text){
+        const postId = req.params.id;
+        const mainUser = req.id;
+        const text = req.body.text;
+        if (!text) {
             return res.status(400).json({
                 success: false,
                 message: 'Text is required !!'
             });
         }
-        const post=await Post.findById(postId);
-        const comment=await Comment.create({
+        const post = await Post.findById(postId);
+        const comment = await Comment.create({
             text,
-            post:postId,
-            author:mainUser
+            post: postId,
+            author: mainUser
         })
-        .populate({path:'author',select:'username,profilePicture'})
+            .populate({ path: 'author', select: 'username profilePicture' })
 
         post.comments.push(comment._id)
         await post.save()
@@ -202,11 +284,11 @@ const addComment=async (req,res) => {
     }
 }
 
-const getCommentsByPost=async (req,res) => {
+const getCommentsByPost = async (req, res) => {
     try {
-        const postId=req.params.id;
-        const allComments=await Comment.find({post:postId}).populate({path:'user',select:'username,profilePicture'})
-        if (!allComments){
+        const postId = req.params.id;
+        const allComments = await Comment.find({ post: postId }).populate({ path: 'user', select: 'username profilePicture' })
+        if (!allComments) {
             return res.status(404).json({
                 success: false,
                 message: 'Comments not found !!'
@@ -223,34 +305,34 @@ const getCommentsByPost=async (req,res) => {
             success: false,
             message: 'Server Error !!'
         });
-        
+
     }
 }
 
-const deletePost=async (req,res) => {
-    let session; 
+const deletePost = async (req, res) => {
+    let session;
     try {
-        session=await mongoose.startSession();
+        session = await mongoose.startSession();
         session.startTransaction();
-        const mainUser=req.id;
-        const postId=req.params.id;
-        const post=await Post.findById(postId);
-        if (!post){
+        const mainUser = req.id;
+        const postId = req.params.id;
+        const post = await Post.findById(postId);
+        if (!post) {
             return res.status(400).json({
                 success: false,
                 message: 'Post not found !!'
             });
         }
-        if(post.author.toString()!==mainUser){
+        if (post.author.toString() !== mainUser) {
             return res.status(403).json({
                 success: false,
                 message: 'User not authorized !!'
             });
         }
-        const delPost=await post.deleteOne({session});
-        const delComments=await Comment.deleteMany({post:postId},{session});
-        const user=await User.findByIdAndUpdate(mainUser,{$pull:{posts:postId}},{session})
-        if(!delPost || !delComments || !user){
+        const delPost = await post.deleteOne({ session });
+        const delComments = await Comment.deleteMany({ post: postId }, { session });
+        const user = await User.findByIdAndUpdate(mainUser, { $pull: { posts: postId } }, { session })
+        if (!delPost || !delComments || !user) {
             await session.abortTransaction();
             session.endSession();
             return res.status(400).json({
@@ -266,7 +348,7 @@ const deletePost=async (req,res) => {
         });
     } catch (error) {
         console.log(error);
-        if(session){
+        if (session) {
             await session.abortTransaction();
             session.endSession();
         }
@@ -277,34 +359,34 @@ const deletePost=async (req,res) => {
     }
 }
 
-const handleSavedPost=async (req,res) => {
+const handleSavedPost = async (req, res) => {
     try {
-        const userId=req.id;
-        const user=await User.findById(userId)
-        const postId=req.params.id;
-        const post=await Post.findById(postId);
-        if (!post || !user){            
+        const userId = req.id;
+        const user = await User.findById(userId)
+        const postId = req.params.id;
+        const post = await Post.findById(postId);
+        if (!post || !user) {
             return res.status(400).json({
                 success: false,
                 message: 'User/Post not found !!'
             });
         }
-        if(user.saved.includes(postId)){
+        if (user.saved.includes(postId)) {
             // unsave
-            await user.updateOne({$pull:{saved:postId}})
+            await user.updateOne({ $pull: { saved: postId } })
             return res.status(200).json({
                 success: true,
                 message: 'Post unsaved !!'
             });
         }
-        else{
+        else {
             //save
-            await user.updateOne({$push:{saved:postId}})
+            await user.updateOne({ $push: { saved: postId } })
             return res.status(200).json({
                 success: true,
                 message: 'Post saved !!'
             });
-        }        
+        }
     } catch (error) {
         console.log(error);
         return res.status(500).json({
@@ -314,10 +396,12 @@ const handleSavedPost=async (req,res) => {
     }
 }
 
-const postController={
+const postController = {
     createPost,
     getAllPosts,
     getPostByUser,
+    getPostById,
+    likeUnlike,
     likePost,
     unlikePost,
     addComment,

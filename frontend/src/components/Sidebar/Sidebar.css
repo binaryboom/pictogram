@@ -1,0 +1,140 @@
+.sidebar {
+    height: 100vh;
+    width: max-content;
+    min-width: 15vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    border-right: 1px solid black;
+    /* padding-right: 0.3rem; */
+    padding-right: 0.3rem;
+    background-color: white;
+    position: fixed;
+
+}
+
+.sidebarIconInfo {
+    margin-left: 0.4rem;
+}
+
+.sidebarItems {
+    transition: all 0.3s ease;
+    margin-left: 0.5rem;
+    cursor: pointer;
+    /* padding: ; */
+    padding: 0.3rem;
+    border-radius: 0.3rem;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar .active {
+    font-weight: bold;
+}
+
+
+.sidebarItems:hover {
+    background-color: #0000000D;
+}
+
+.sidebarLogo {
+    text-align: left;
+    margin-left: 0.5rem;
+    font-size: 1.5rem;
+}
+
+.sidebarProfileImg {
+    border: 2px solid black;
+    border-radius: 50%;
+    height: 1.2rem;
+    width: 1.2rem;
+}
+.mobNavbar{
+    display: none;
+}
+
+@media only screen and (max-width: 767px) {
+    .sidebarIconInfo {
+        display: none;
+    }
+
+    .sidebarLogo {
+        display: none;
+    }
+
+    .sidebar {
+        margin-bottom: 0.1rem;
+        border-radius: 0.8rem;
+        padding: 0.5rem;
+        border: 2px solid black;
+        height: max-content;
+        width: 91vw;
+        position: fixed;
+        bottom: 0;
+        flex-direction: row;
+        z-index: 1000;
+        background-color: white;
+        min-width: min-content;
+    }
+
+    .sidebar i {
+        font-size: 2rem;
+        padding: 0.2rem;
+    }
+    /* i{
+        padding: 0.5rem;
+        } */
+    .sidebar .active {
+        background-color: black;
+        color: white;
+    }
+    .mobNavbar .active {
+        background-color: black;
+        color: white;
+    }
+
+    /* .sidebarItems:hover {
+        background-color: transparent;
+    } */
+     .sidebarItems{
+        padding: 0.2rem;
+     }
+
+    .sidebarProfileImg {
+        height: 2rem;
+        width: 2rem;
+    }
+
+    .sidebarSearch,
+    .sidebarNotifications,
+    .sidebarLogout {
+        display: none;
+    }
+
+    .mobLogo {
+        text-align: start;
+        /* font-size: 1.6rem; */
+        padding-bottom: 0.2rem;
+        padding-top: 0;
+    }
+    .mobNavbar{
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+        border: 2px solid black;
+        border-radius: 0.8rem;
+        position: sticky;
+        top: 0.1vh;
+        background-color: white;
+        z-index: 1000;
+        min-width: min-content;
+    }
+    .mobNavbarIcons{
+        display: block;
+    }
+    .mobNavbar i{
+        margin: 0;
+        padding: 0.1rem;
+    }
+    
+}

@@ -1,0 +1,111 @@
+.fullPostCard{
+  max-width: 55vw;
+  /* overflow: hidden; */
+  /* min-width: fit-content; */
+    background-color: white;
+    display: flex;
+    border: 2px solid black;
+    padding: 1rem;
+    /* padding-bottom: 0.5rem; */
+    border-radius: 0.5rem;
+    justify-content: space-evenly;
+    gap: 1rem;
+    transform: scaleX(1.5) scaleY(1.2);
+}
+.dialog i{
+  cursor: pointer;
+}
+.fullPostCardLeft{
+    padding-bottom: 0;
+}
+.fullPostCardRight{
+    border-left: 1px solid black;
+    padding-left: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.fullPostCaption{
+    border-bottom: 1px solid black;
+    max-height: 5vh;
+    padding-bottom:0.5rem ;
+    font-size: 0.7rem;
+    overflow: scroll;
+}
+.fullPostCaption span{
+  display: none;
+}
+.fullPostCreateComment{
+    gap: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 0.5rem;
+    border-top: 1px solid black;
+}
+.allComments{
+  overflow: scroll;
+  max-height: 45vh;
+  max-width: 52vw;
+}
+.fullPostCard .postButtons i{
+    padding: 0.2rem;
+}
+.dialog{
+  padding: 1rem;
+}
+.fullPostRightCorner{
+position: fixed;
+right: 10vh;
+top: 3vh;
+}
+.fullPostCreateComment input{
+  width: 18vw;
+}
+.postCommentBtn{
+  padding: 0.5rem;
+  border: 2px solid black;
+}
+
+.fullPostPhoto img{
+  height: 45vh;
+  width: 25vw;
+}
+@media only screen and (max-width: 767px) {
+  .fullPostPhoto img{
+    height: 35vh;
+    width: 80vw;
+    width: 100%;
+  }
+  .fullPostCard{
+    max-width: none;
+    padding: 1rem;
+    flex-direction: column;
+    /* height: 80%;
+    width: 70vw; */
+    transform: none;
+    /* transform: scaleY(1.1); */
+  }
+  .fullPostRightCorner{
+    right: 50%;
+    left: 45%;
+    top: 1.5vh;
+  }
+  .fullPostCardRight{
+    border: none;
+  }
+  .fullPostCreateComment input{
+    width: 58vw;
+  }
+  .fullPostCaption {
+    font-size: 0.9rem;
+    max-height: 6vh;
+  }
+  .fullPostCaption span{
+    display: inline;
+  }
+  .allComments{
+    max-width: 100%;
+    max-height: 15vh;
+  }
+}

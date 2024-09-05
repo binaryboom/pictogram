@@ -1,0 +1,12 @@
+/* Example using Pacifico font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
+
+
+.logo{
+    cursor: pointer;
+    font-family: 'Pacifico' !important;
+    text-align: center;
+    font-size: 2rem;
+    padding: 0.4rem;
+}

@@ -5,10 +5,13 @@ import '../Signup/Signup.css'
 import Logo from '../Logo/Logo'
 import { useApi } from '../../context/apiContext'
 import { useAlert } from '../../context/AlertContext'
-import { Link,Navigate,useNavigate } from 'react-router-dom'
+import { Link ,Navigate, useNavigate} from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { setAuthUser } from '../../redux/authSlice.js'
 
-const Signup = () => {
-  const navigate=useNavigate();
+const Login = () => {
+  const dispatch=useDispatch()
+  const navigate=useNavigate()
   const { showAlert } = useAlert();
   const [loading, setLoading] = useState(false);
   const apiUrl = useApi()
@@ -34,7 +37,7 @@ const Signup = () => {
       // res = await axios.post(`${apiUrl}/user/register`, data,
       //   { headers: headers, withCredentials: true }
       // )
-      let req = await fetch(`${apiUrl}/user/register`, {
+      let req=await fetch(`${apiUrl}/user/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -42,16 +45,16 @@ const Signup = () => {
         body: JSON.stringify(data),
         credentials: 'include',
       });
-      res = await req.json()
+      res=await req.json()
       console.log(res)
 
     } catch (error) {
-      res = { success: false, message: 'Unable to connect with server' }
+      res={success:false,message:'Unable to connect with server'}
       console.log(error)
       showAlert(res)
     }
     finally {
-      res.success ?( reset(),navigate('/login') ): null
+      res.success? (reset(),navigate('/'),dispatch(setAuthUser(res.user)) ):null
       showAlert(res)
       setLoading(false)
     }
@@ -71,46 +74,35 @@ const Signup = () => {
           <div className="formGroup">
             <Logo />
             <div className="signupText">
-              Sign up to see photos and videos <br /> from your friends.
+              Login to see photos and videos <br /> from your friends.
             </div>
           </div>
 
-          <div className="formGroup">
-            <label htmlFor='email'>Enter Email :</label>
-            <input id='email' placeholder="enter email" {...register("email", {
-              required: { value: true, message: 'Required' }, pattern: {
-                value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
-                message: 'Invalid email address',
-              },
-            })} />
-            {errors.email && <div className='error'>{errors.email.message}</div>}
-          </div>
 
           <div className="formGroup">
-            <label htmlFor='username'>Enter Username :</label>
-            <input id='username' placeholder="enter username" {...register("username", { required: { value: true, message: 'Required' }, minLength: { value: 5, message: 'Length should be more than 5' },
-            maxLength: { value: 12, message: 'Maximum 12 characters allowed' } })} />
-            {errors.username && <div className='error'>{errors.username.message}</div>}
+            <label htmlFor='usernameEmail'>Enter Username / Email :</label>
+            <input id='usernameEmail' placeholder="enter username / email" {...register("usernameEmail", { required: { value: true, message: 'Required' }, minLength: { value: 5, message: 'Length should be more than 5' } })} />
+            {errors.usernameEmail && <div className='error'>{errors.usernameEmail.message}</div>}
           </div>
 
           <div className="formGroup">
             <label htmlFor='password'>Enter Password :</label>
             <input id='password' type='password' placeholder='enter password' {...register('password',
               {
-                maxLength: { value: 12, message: 'Maximum 12 characters allowed' },
-                required: { value: true, message: 'Required' }, pattern: {
-                  value: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
-                  message:
-                    'Password must be at least 6 characters long and include at least one letter, one number, and one special character',
-                },
+                required: { value: true, message: 'Required' }, 
+                maxLength: { value: 12, message: 'Maximum 12 characters allowed' }
+                // pattern: {
+                //   value: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
+                //   message:
+                //     'Password must be at least 6 characters long and include at least one letter, one number, and one special character',
+                // },
               })} />
             {errors.password && <div className='error'>{errors.password.message}</div>}
           </div>
 
-
-          <button className='signupBtn'>Signup</button>
+          <button className='signupBtn'>Login</button>
           <div className="redirect">
-            Already have an account? <Link to='/login' style={{ color: '#0095F6' }}>Login</Link>
+        Don't have an account? <Link to='/signup' style={{color:'#0095F6'}}>Signup</Link>
           </div>
         </form>
 
@@ -119,4 +111,4 @@ const Signup = () => {
   )
 }
 
-export default Signup
+export default Login
