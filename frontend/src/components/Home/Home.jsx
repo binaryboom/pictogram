@@ -11,36 +11,36 @@ import { useApi } from '../../context/apiContext.jsx'
 
 
 const Home = () => {
-  // useGetAllPosts()
+  useGetAllPosts()
   const [loading,setLoading]=useState(false);
   const apiUrl = useApi();
   const { showAlert } = useAlert();
   const dispatch = useDispatch();
 
-  const fetchAllPosts = async () => {
-    let res;
-    try {
-      let req = await fetch(`${apiUrl}/post/allPosts`, {
-        method: 'GET',
-        credentials: 'include',
-      });
-      res = await req.json();
-      console.log(res);
+  // const fetchAllPosts = async () => {
+  //   let res;
+  //   try {
+  //     let req = await fetch(`${apiUrl}/post/allPosts`, {
+  //       method: 'GET',
+  //       credentials: 'include',
+  //     });
+  //     res = await req.json();
+  //     console.log(res);
 
-    } catch (error) {
-      res = { success: false, message: 'Unable to connect with server' };
-      console.log(error);
-      showAlert(res);
-    }
-    finally {
-      res.success ? dispatch(setPosts(res.allPosts)) : null;
-      setLoading(false);
-    }
-  };
+  //   } catch (error) {
+  //     res = { success: false, message: 'Unable to connect with server' };
+  //     console.log(error);
+  //     showAlert(res);
+  //   }
+  //   finally {
+  //     res.success ? dispatch(setPosts(res.allPosts)) : null;
+  //     setLoading(false);
+  //   }
+  // };
 
-  useEffect(() => {
-    fetchAllPosts();
-  });
+  // useEffect(() => {
+  //   fetchAllPosts();
+  // });
 
   return (
   <div className='home'>

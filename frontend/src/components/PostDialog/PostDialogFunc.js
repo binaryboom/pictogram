@@ -1,5 +1,9 @@
+import { setAuthUser } from "../../redux/authSlice";
+import { setPosts } from "../../redux/postSlice";
+
+
 const deletePost = async (id, properties) => {
-    const {apiUrl,setLoading,navigate,showAlert} =properties;
+    const {apiUrl,setLoading,navigate,showAlert,posts,dispatch} =properties;
     let res;
     try {
         setLoading(true)
@@ -18,16 +22,26 @@ const deletePost = async (id, properties) => {
     finally {
         setLoading(false)
         showAlert(res)
-        res.success ? (setTimeout(()=>{navigate('/')},3000)) : ''
+        if(res.success){
+            const updatedPosts=posts.filter((i)=>(
+                i._id !== id
+            ))
+            dispatch(setPosts(updatedPosts))
+            const currentPath = window.location.pathname;
+            // console.log(currentPath)
+            if (currentPath !== '/' && currentPath.split('/').length > 1) {
+                navigate('/');
+            }
+        }
     }
 }
 
-const likeUnlike = async (id, properties) => {
-    const {apiUrl,setLoading,navigate,showAlert} =properties;
+const followUnfollow = async (id, properties) => {
+    const {apiUrl,setLoading,navigate,showAlert,dispatch,user} =properties;
     let res;
     try {
-        setLoading(true)
-        let req = await fetch(`${apiUrl}/post/${id}/likeUnlike`, {
+        // setLoading(true)
+        let req = await fetch(`${apiUrl}/user/${id}/followUnfollow`, {
             method: 'POST',
             credentials: 'include',
         });
@@ -40,15 +54,20 @@ const likeUnlike = async (id, properties) => {
         showAlert(res)
     }
     finally {
-        setLoading(false)
-        showAlert(res)
-        res.success ? (setTimeout(()=>{navigate('/')},3000)) : ''
+        // setLoading(false)
+        if(res.success){
+            dispatch(setAuthUser({...user,following:res.followList.following,followers:res.followList.followers}));
+            // handleDialog()
+        }
+        else{
+            showAlert(res)
+        }
     }
 }
 
 const PostDialogFunc = {
    deletePost,
-   likeUnlike,
+   followUnfollow,
 };
 
 export default PostDialogFunc;

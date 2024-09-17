@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
 .fullPostCard{
   max-width: 55vw;
   /* overflow: hidden; */
@@ -36,7 +37,7 @@
   display: none;
 }
 .fullPostCreateComment{
-    gap: 0.5rem;
+    /* gap: 0.5rem; */
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -44,9 +45,58 @@
     border-top: 1px solid black;
 }
 .allComments{
+  padding-top: 0.3rem;
   overflow: scroll;
   max-height: 45vh;
   max-width: 52vw;
+  display: flex;
+  flex-direction: column;
+  /* flex-wrap: wrap; */
+  gap: 0.3rem;
+}
+.allComments .item{
+  display: flex;
+  gap: 0.7rem;
+  /* justify-content: space-between; */
+}
+.allComments .itemLeft{
+  gap: 0.4rem;
+  align-items: center;
+  display: flex;
+  justify-items: flex-start;
+  cursor: pointer;
+  min-width: fit-content;
+}
+.commentUserUsername{
+  font-size: 0.8rem;
+  font-family: Pacifico;
+}
+.commentUserText{
+  /* font: 0.8rem Pacifico; */
+  /* white-space:; */
+  font-size: 0.7rem;
+  font-weight: 500;
+  word-break: break-all;
+  /* opacity: 0.7; */
+}
+.allComments .itemRight{
+  align-items: center;
+  max-width: 65%;
+  display: flex;
+
+}
+.commentTime{
+  font-size: 0.5rem;
+  max-width: 75px;
+  /* text-align: center; */
+}
+.allComments img{
+  border-radius: 0.5rem;
+  height: 2rem;
+  width: 2rem;
+}
+.fullPostCard .postButtons{
+  margin-top: 0.3rem;
 }
 .fullPostCard .postButtons i{
     padding: 0.2rem;
@@ -61,30 +111,66 @@ top: 3vh;
 }
 .fullPostCreateComment input{
   width: 18vw;
+  max-width: 70%;
 }
 .postCommentBtn{
   padding: 0.5rem;
   border: 2px solid black;
 }
-
+.fullPostPhoto{
+  display: flex;
+  justify-content: center;
+}
 .fullPostPhoto img{
   height: 45vh;
   width: 25vw;
+  /* max-width: 400px; */
+}
+.commentBlueTick img{
+  /* vertical-align: super; */
+  height: 0.7rem;
+  width:0.7rem;
+  cursor: pointer;
+
+}
+.fullPostCard .postBlueTick img{
+  cursor: pointer;
+  height: 1.5rem;
+  width: 1.5rem;
+}
+.authorImg,.authorUsername{
+  cursor: pointer;
+}
+.commentUserPhoto{
+  display: flex;
 }
 @media only screen and (max-width: 767px) {
+  .commentTime{
+    font-size: 0.6rem;
+  }
+  .commentBlueTick img{
+    height: 1rem;
+    width: 0.93rem;
+  }
+  .commentUserUsername{
+    font-size: 1rem;
+    min-width: 4rem;
+  }
   .fullPostPhoto img{
     height: 35vh;
     width: 80vw;
-    width: 100%;
+    max-width: 500px;
+    /* width: 100%; */
   }
   .fullPostCard{
     max-width: none;
-    padding: 1rem;
+    padding: 0.7rem;
     flex-direction: column;
     /* height: 80%;
     width: 70vw; */
     transform: none;
     /* transform: scaleY(1.1); */
+    gap: 0;
   }
   .fullPostRightCorner{
     right: 50%;
@@ -107,5 +193,14 @@ top: 3vh;
   .allComments{
     max-width: 100%;
     max-height: 15vh;
+  }
+  .commentUserText{
+    font-size: 0.9rem;
+  }
+}
+
+@media screen and (min-width: 450px) {
+  .fullPostPhoto img{
+    height: 45vh;
   }
 }

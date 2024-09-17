@@ -1,0 +1,103 @@
+.profilePage {
+    /* height: 100%; */
+    /* width: 100%; */
+    width: 68vw;
+}
+
+.profileContainer {
+    padding: 0.3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    /* align-items: center; */
+}
+
+.profileUserInfo {
+    align-items: center;
+    display: flex;
+    gap: 1rem;
+    justify-content: space-evenly;
+}
+
+.profileUserInfo img {
+    height: 7rem;
+    width: 7rem;
+}
+.profileBlueTick img{
+    margin: 0 !important;
+}
+.profileOtherInfo {
+    border-bottom: 2px solid black;
+    margin-top: 2rem;
+    display: flex;
+    justify-content: space-around;
+    gap: 1rem;
+    /* margin-bottom: 1rem; */
+}
+
+.profileItemsRight {
+    display: flex;
+    gap: 1rem;
+    flex-direction: column;
+}
+
+.subItemsRight {
+    align-items: center;
+    gap: 1rem;
+    display: flex;
+}
+
+.profilePostContainer {
+    /* height: 100vh; */
+    /* max-height: 640px; */
+    min-height: 40vh; /* Ensure a minimum height */
+    max-height: 70vh;
+    overflow: scroll;
+    padding: 0.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+
+}
+
+.profilePostCard {
+    align-self: start;
+}
+
+.profilePostCard img {
+    height: 45vh;
+    width: 20vw;
+}
+.profilePostOptions{
+    margin: 0.7rem;
+    display: flex;
+    justify-content: space-around;
+    border-bottom: 2px solid black;
+    padding-bottom: 0.4rem;
+}
+@media only screen and (max-width: 767px) {
+    .profilePage {
+        width: 100%;
+    }
+
+    .profilePostCard img {
+        height: 25vh;
+        width: 40vw;
+    }
+
+    .profilePostContainer {
+        /* max-height: 520px; */
+        min-height: 30vh;
+        max-height: 50vh; 
+    }
+}
+
+@media (max-height: 750px) {
+    .profilePostContainer {
+        /* max-height: 300px; */
+        max-height: 40vh; /* Adjust height for shorter screens */
+    }
+
+}
+

@@ -1,0 +1,414 @@
+.chatMainRight {
+    display: flex;
+    margin-top: 1rem;
+    padding-left: 20vw;
+}
+
+.chatPage {
+    height: 93vh;
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* .mainUserUsername{
+    font-size: 1.5rem;
+    font-family: Pacifico;
+    margin-bottom: 0.3rem;
+} */
+.chatPageLeft {
+    position: relative;
+    /* height: 90vh; */
+    padding: 0.5rem;
+    width: 25vw;
+    border: 2px solid black;
+    border-radius: 0.5rem;
+}
+
+
+.chatTitle {
+    font-size: 1.3rem;
+    font-weight: bold;
+    /* margin-bottom: 0.5rem; */
+}
+
+.selectedChat {
+    background-color: #00000024;
+}
+
+.chatLeftCard {
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    /* background-color: #00000024; */
+    padding: 0.2rem;
+    padding-top: 0.4rem;
+    padding-left: 0.4rem;
+    border-radius: 0.5rem;
+    display: flex;
+}
+
+.chatRightCard1 {
+    display: flex;
+}
+
+.sendMsgBtn {
+    color: white;
+    font-weight: bold;
+    padding: 0.2rem;
+    padding-left: 0.4rem;
+    padding-right: 0.4rem;
+    background-color: #0095F6;
+    border: 3px solid black;
+    border-radius: 1rem;
+}
+
+.chatBlueTick {
+    height: 1.2rem;
+    width: 1.2rem;
+}
+
+.getAllUsers {
+    position: absolute;
+    width: min-content;
+    height: fit-content;
+    background-color: #0095F6;
+    color: white;
+    bottom: 2rem;
+    right: 1rem;
+    /* padding: 1rem; */
+    /* padding-left: 0.5rem;
+    padding-right: 0.5rem; */
+    /* padding: 0.3rem; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid black;
+    border-radius: 50%;
+
+}
+
+.getAllUsers i {
+    padding: 1.2rem;
+    padding-left: 0.4rem;
+    cursor: pointer;
+    padding-right: 0.4rem;
+}
+
+.chatLeftUserPhoto img {
+    height: 3rem;
+    width: 3rem;
+    margin-right: 0.4rem;
+}
+
+.chatOnlineUserPhoto img {
+    height: 2.5rem;
+    width: 2.5rem;
+    /* margin-right: 0.2rem; */
+}
+
+.chatRightCardLeft,
+.chatRightUserPhoto {
+    display: flex;
+    align-items: center;
+}
+
+.onlineCardContainer {
+    /* min-height: 15vh; */
+    gap: 0.5rem;
+    display: flex;
+    overflow-x: scroll;
+}
+.onlineCardContainerHeight{
+    min-height: 15vh;
+    max-height: 10px;
+}
+.chatOnlineUserPhoto {
+    display: flex;
+    justify-content: center;
+
+}
+
+.chatOnlineCardLeft {
+    display: flex;
+    width: max-content;
+    flex-direction: column;
+    justify-content: center;
+    /* background-color: #00000024; */
+    /* padding: 0.2rem; */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    padding: 0.4rem;
+    margin: 0.2rem;
+    /* margin-bottom: 0.2rem; */
+    flex-shrink: 0;
+    cursor: pointer;
+    border-radius: 0.5rem;
+}
+
+.chatRightCardLeft {
+    gap: 1rem;
+}
+
+.chatRightUserPhoto img {
+    height: 2.5rem;
+    width: 2.5rem;
+    margin-right: 0.5rem;
+}
+
+.chatLeftUserUsername {
+    font-family: Pacifico;
+}
+
+.chatOnlineUserUsername {
+    font-family: Pacifico;
+    font-size: 0.9rem;
+}
+
+.chatLeftCardLastMsg {
+    font-size: 0.7rem;
+}
+
+.chatPageLeftBody {
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-height: 90%;
+    overflow-y: auto;
+}
+
+.allChatsTitle {
+    font-weight: 500;
+    background-color: black;
+    color: white;
+    padding-left: 0.5rem;
+    border-radius: 0.5rem;
+    margin-top: 0.3rem;
+    margin-bottom: 0.3rem;
+}
+
+
+/* gpt */
+.chatPageRight {
+    /* max-height: 80vh; */
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    border: 2px solid black;
+    width: 47vw;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    /* Prevent content overflow */
+}
+
+.chatPageRightTop {
+    padding: 0.2rem;
+    padding-left: 0.4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* background-color: #0000003b; */
+    border-radius: 0.5rem;
+    max-height: 10vh;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    margin-bottom: 0.5rem;
+}
+
+.chatPageRightMiddle {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    display: flex;
+    gap: 0.5rem;
+    border-radius: 0.5rem;
+    background-color: #fff;
+    overflow-y: auto;
+    padding: 0.5rem;
+    flex-direction: column;
+    flex: 1;
+    /* Allow this section to grow */
+    margin-bottom: 0.5rem;
+}
+
+.otherUserMsg,
+.mainUserMsg {
+    /* display: block; */
+    display: inline-flex;
+    align-items: baseline;
+    /* display: inline; */
+    max-width: 80%;
+    word-break: break-all;
+    white-space: pre-wrap;
+    /* min-width: 5vw; */
+    /* min-width: fit-content; */
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.3rem;
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+.otherUserMsg {
+    align-self: flex-start;
+    /* margin-right: 15%; */
+    background-color: #00000024;
+    color: #000;
+}
+
+.mainUserMsg {
+    /* margin-left: 15%; */
+    align-self: flex-end;
+    color: white;
+    background-color: #0095F6;
+}
+
+.chatPageRightBottom {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: space-between;
+    border-radius: 1rem;
+    /* border-top: 1px solid black; */
+    /* background-color: #0000003b; */
+    flex-shrink: 0;
+    padding: 0.3rem;
+}
+
+
+.chatPageRightBottom textarea {
+    border-radius: 1rem;
+    border: 3px solid #00000096;
+    border-color: black;
+    padding: 0.3rem;
+    padding-left: 0.5rem;
+    padding-top: 0.5rem;
+    height: 1.5rem;
+    resize: none;
+    width: 85%;
+    /* border: none; */
+}
+
+
+
+/* gpt */
+.chatRightCardUserUsername {
+    font: 1.2rem Pacifico;
+}
+
+.chatRightCardLastSeen {
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.center-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.center-container div{
+    background-color: black;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    padding-bottom: 0.5rem;
+    border-radius: 1rem;
+}
+
+.noChatSelected {
+    font-size: 1.5rem;
+    font-weight: bold;
+    /* margin-bottom: 1rem; */
+    /* Space between text and icon */
+}
+
+.fa-user-group {
+    font-size: 5rem;
+    /* Adjust icon size as needed */
+}
+
+.messageTime{
+    min-width: fit-content;
+    text-align: end;
+    /* font-weight: bold; */
+    display: block;
+    font-size: 0.6rem;
+    /* margin-top: 0.2rem; */
+    margin-left: 0.5rem;
+    align-self: flex-end;
+}
+.messageDate{
+    text-align: center;
+    background-color: black;
+    color: white;
+    border-radius: 0.5rem;
+    font-weight: bold;
+    margin-left: 10rem;
+    margin-right: 10rem;
+    /* width: max-content; */
+}
+.mobBackBtn,.chatRightUserPhoto,.chatRightCardUserUsername{
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 860px) {
+    .messageDate{
+        margin-left: 3rem;
+        margin-right: 3rem;
+    }
+}
+@media only screen and (max-width: 767px) {
+
+    
+    .chatMainRight {
+        margin-top: 0;
+        padding-left: 0;
+    }
+
+    .chatPage {
+        /* margin-left: 0.3rem; */
+        /* margin-right: 1rem; */
+
+        margin-top: 9vh;
+    }
+
+    .chatPageLeft {
+        /* display: none; */
+        position: fixed;
+        width: 90vw;
+        max-height: 77%;
+        min-height: 77%;
+    }
+    .chatPageLeftBody{
+        max-height: none;
+    }
+
+    .chatPageLeft.hide {
+        display: none;
+        /* Hide when the hide class is applied */
+    }
+
+    .chatPageRight {
+        min-height: 77%;
+        max-height: 77%;
+        width: 90%;
+        position: fixed;
+        display: none;
+    }
+
+    .chatPageRight.show {
+        display: inline-flex;
+    }
+
+    .chatPageRightTop {
+        max-height: 7vh;
+    }
+
+    .getAllUsers i {
+        font-size: 2rem;
+        padding: 1.6rem;
+        padding-left: 0.6rem;
+        padding-right: 0.6rem;
+        cursor: pointer;
+    }
+    
+    .onlineCardContainerHeight{
+        min-height: 10vh;
+    }
+}

@@ -3,9 +3,15 @@ import './CreatePost.css'
 import { useAlert } from '../../context/AlertContext';
 import { useApi } from '../../context/apiContext';
 import {useNavigate} from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux';
+import { setPosts } from '../../redux/postSlice';
+import { setAuthUser } from '../../redux/authSlice';
+
 
 const CreatePost = ({ handleCreatePost ,user}) => {
+  const {posts}=useSelector(store=>store.post)
   const navigate=useNavigate();
+  const dispatch=useDispatch()
   const apiUrl=useApi()
   const [loading, setLoading] = useState(false);
   const { showAlert } = useAlert();
@@ -57,7 +63,11 @@ const CreatePost = ({ handleCreatePost ,user}) => {
       showAlert(res)
     }
     finally {
-      res.success? (handleCreatePost(),navigate('/') ):null
+      // res.success? (handleCreatePost(),navigate('/') ):null
+      if(res.success){
+        handleCreatePost()
+        dispatch(setPosts([res.post,...posts]))
+    }
       showAlert(res)
       setLoading(false)
     }
@@ -70,14 +80,14 @@ const CreatePost = ({ handleCreatePost ,user}) => {
         </div>
       )}
       <div className="fullPostRightCorner">
-        <i onClick={handleCreatePost} className="fa-regular fa-2xl fa-circle-xmark"></i>
+        <i onClick={handleCreatePost}person className="fa-regular fa-2xl fa-circle-xmark"></i>
       </div>
       <div className="createPostBox">
         <div className='createPostTitle'>Create New Post</div>
         <div className="userInfo">
           <div className="postCardLeft">
             <div className="authorImg">
-              <img src={user.profilePicture || 'person.png'} alt="photo" />
+              <img draggable='false' src={user.profilePicture || '/person.png'} alt="photo" />
             </div>
             <div className="authorUsername">{user.username}</div>
           </div>
@@ -89,7 +99,7 @@ const CreatePost = ({ handleCreatePost ,user}) => {
           <div className="createPostPhoto">
             {imagePreview && (
               <div className="imagePreview">
-                <img src={imagePreview} alt="Preview" />
+                <img draggable='false' src={imagePreview} alt="Preview" />
               </div>
             )}
             <input onChange={handleImageUpload} ref={imgRef} accept="image/*" type="file" />

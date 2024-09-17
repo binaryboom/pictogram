@@ -2,6 +2,7 @@
     height: 100vh;
     width: max-content;
     min-width: 15vw;
+    /* max-width: 15vw; */
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
@@ -49,11 +50,31 @@
     height: 1.2rem;
     width: 1.2rem;
 }
-.mobNavbar{
+
+.mobNavbar {
     display: none;
+}
+.notificationCount{
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding:0.3rem;
+    padding-top: 0rem;
+    padding-bottom: 0rem;
+    /* padding-left: 0.rem; */
+    font-weight: bold;
+    /* padding-right: 0.6rem; */
+    /* vertical-align: super; */
+    margin-bottom: 0.5rem;
+    margin-left: 0.1rem;
 }
 
 @media only screen and (max-width: 767px) {
+    .notificationCount{
+        padding:0.2rem;
+        padding-left: 0.6rem;
+        padding-right: 0.6rem;
+    }
     .sidebarIconInfo {
         display: none;
     }
@@ -75,30 +96,33 @@
         z-index: 1000;
         background-color: white;
         min-width: min-content;
+        max-width: none;
     }
 
     .sidebar i {
         font-size: 2rem;
         padding: 0.2rem;
     }
+
     /* i{
         padding: 0.5rem;
         } */
     .sidebar .active {
-        background-color: black;
+        background-color: #000000d5;
         color: white;
     }
+
     .mobNavbar .active {
-        background-color: black;
+        background-color: #000000d5;
         color: white;
     }
 
     /* .sidebarItems:hover {
         background-color: transparent;
     } */
-     .sidebarItems{
+    .sidebarItems {
         padding: 0.2rem;
-     }
+    }
 
     .sidebarProfileImg {
         height: 2rem;
@@ -117,24 +141,36 @@
         padding-bottom: 0.2rem;
         padding-top: 0;
     }
-    .mobNavbar{
+
+    .mobNavbar {
         display: flex;
         align-items: center;
         justify-content: space-evenly;
         border: 2px solid black;
         border-radius: 0.8rem;
         position: sticky;
-        top: 0.1vh;
+        /* top: 0.1vh; */
+        position: fixed;
         background-color: white;
         z-index: 1000;
-        min-width: min-content;
+        /* min-width: min-content; */
+        min-width: 95%;
     }
-    .mobNavbarIcons{
+
+    .mobNavbarIcons {
+        min-width: fit-content;
         display: block;
     }
-    .mobNavbar i{
+
+    .mobNavbar i {
         margin: 0;
         padding: 0.1rem;
     }
-    
+
+}
+
+@media (max-height: 330px) {
+    .sidebar {
+        transform: scaleY(0.9);
+    }
 }

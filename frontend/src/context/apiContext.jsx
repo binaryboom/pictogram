@@ -5,7 +5,8 @@ export const useApi = () => {
     return useContext(apiContext);
 }
 export const ApiProvider = ({ children }) => {
-    const [apiUrl] = useState('http://localhost:3000/api/v1')
+    // const [apiUrl] = useState('http://localhost:3000/api/v1')
+    const [apiUrl] = useState('http://192.168.1.45:3000/api/v1')
     return (
         <apiContext.Provider value={apiUrl} >
             { children }

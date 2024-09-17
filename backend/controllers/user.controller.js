@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import getDataUri from '../utils/datauri.js';
 import cloudinary from '../utils/cloudinary.js';
+import { getReceiverSocketId, io } from '../socket/socket.js';
 
 
 const register=async (req,res) => {
@@ -114,8 +115,22 @@ const logout=async (req,res) => {
 
 const getProfile= async (req,res) => {
     try {
-        let userId=req.params.id;
-        let user= await User.findById(userId).select('-password');
+        // let userId=req.params.id;
+        let userId=req.params.username;
+        // let user= await User.findById(userId).select('-password');
+        let user= await User.findOne({username:userId})
+        .select('-password')
+        .populate({
+            path:'posts',
+            select:'image _id',
+            options: { sort: { createdAt: -1 } }
+        })
+        .populate({
+            path:'saved',
+            select:'image _id',
+            options: { sort: { createdAt: -1 } }
+        })
+
         if(!user){
             return res.status(401).json({
                 success:false,
@@ -137,9 +152,11 @@ const getProfile= async (req,res) => {
 
 const editProfile= async (req,res) => {
     try {
+// console.log(req.file); // Should contain the image file info
+// console.log(req.body); 
         let userId=req.id;
         let {bio,gender}=req.body;
-        const profilePicture=req.file;
+        const image=req.file;
         let cloudResp;
         let user= await User.findById(userId).select('-password');
         if(!user){
@@ -148,15 +165,16 @@ const editProfile= async (req,res) => {
                 message:'User does not exist !!'
             })
         }
-        if(profilePicture){
-            const fileUri=getDataUri(profilePicture);
+        if(image){
+            const fileUri=getDataUri(image);
             cloudResp=await cloudinary.uploader.upload(fileUri)
             user.profilePicture=cloudResp.secure_url;
         }
         if(bio) user.bio=bio;
-        if(gender) user.gender=gender;
+        if(gender=='male' || gender=='female') user.gender=gender;
 
         await user.save()
+        user=await User.findById(userId).select('-password');
         return res.status(200).json({
             success: true,
             message:'Profile updated !!',
@@ -173,9 +191,9 @@ const editProfile= async (req,res) => {
 
 const getSuggestedUsers= async (req,res) => {
     try {
-        const suggestedUsers= await User.find({_id:{$ne:req.id}}).select('-password').limit(5)
+        const suggestedUsers= await User.find({_id:{$ne:req.id}}).select('profilePicture username _id isVerified').limit(5)
         if(!suggestedUsers){
-            return res.status(401).json({
+            return res.status(404).json({
                 success: false,
                 message: 'No suggested users !!'
             });
@@ -183,7 +201,41 @@ const getSuggestedUsers= async (req,res) => {
         return res.status(200).json({
             success: true,
             message: 'Users found !!',
-            user:suggestedUsers
+            suggestedUsers
+        });
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json({
+            success: false,
+            message: 'Server Error !!'
+        });
+    }
+}
+const setLastSeen= async (req,res) => {
+    try {
+        console.log(req.body)
+        const {userId}=req.body;
+        const lastSeen=req.body.lastSeen;
+        let user= await User.findById(userId).select('-password');
+        if (!lastSeen || isNaN(new Date(lastSeen))) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid lastSeen value!',
+            });
+        }
+        if(!user){
+            return res.status(404).json({
+                success:false,
+                message:'User does not exist !!'
+            })
+        }
+        user.lastSeen = new Date(lastSeen); 
+        await user.save();
+        
+        return res.status(200).json({
+            success: true,
+            message: 'Last seen updated !!',
+            lastSeen: user.lastSeen
         });
     } catch (e) {
         console.log(e);
@@ -223,9 +275,20 @@ const followUnfollow=async (req,res) => {
             User.findByIdAndUpdate(mainUserId,{$pull:{following:otherUserId}}),
             User.findByIdAndUpdate(otherUserId,{$pull:{followers:mainUserId}})
         ])
+        const followList=await User.findById(mainUserId).select('followers following')
+        const notification={
+            type:'unfollow',
+            mainUserId,
+            otherUserId,
+            message: `You got unfollowed by ${mainUser.username}`
+        }
+        const otherUserSocketId=getReceiverSocketId(otherUserId.toString())
+        console.log('Emitting followNotification:', notification,otherUserSocketId);
+        io.to(otherUserSocketId).emit('followNotification',notification)
         return res.status(200).json({
             success:true,
-            message:'User unfollowed !!'
+            message:'User unfollowed !!',
+            followList
         })
     }else{
         // do follow
@@ -233,9 +296,20 @@ const followUnfollow=async (req,res) => {
             User.findByIdAndUpdate(mainUserId,{$push:{following:otherUserId}}),
             User.findByIdAndUpdate(otherUserId,{$push:{followers:mainUserId}})
         ])
+        const followList=await User.findById(mainUserId).select('followers following')
+        const notification={
+            type:'follow',
+            mainUserId,
+            otherUserId,
+            message: `${mainUser.username} started to follow you`
+        }
+        const otherUserSocketId=getReceiverSocketId(otherUserId.toString())
+        io.to(otherUserSocketId).emit('followNotification',notification)
+        console.log('Emitting followNotification:', notification,otherUserSocketId);
         return res.status(200).json({
             success:true,
-            message:'User followed !!'
+            message:'User followed !!',
+            followList
         })
     }
         
@@ -248,6 +322,36 @@ const followUnfollow=async (req,res) => {
                 
     }
 }
+async function addIsVerifiedToUsers() {
+    try {
+        // Update all users that do not have the 'isVerified' field
+        await User.updateMany({ isVerified: { $exists: false } }, { $set: { isVerified: false } });
+        console.log('Updated all users with the isVerified field');
+    } catch (error) {
+        console.error('Error updating users:', error);
+    }
+}
+
+async function lastSeen() {
+    try {
+        // Update all users that do not have the 'isVerified' field
+        await User.updateMany({ lastSeen: { $exists: false } }, { $set: { lastSeen:  new Date()} });
+        console.log('Updated all users with the isVerified field');
+    } catch (error) {
+        console.error('Error updating users:', error);
+    }
+}
+
+async function verifyRaghav() {
+    try {
+        // Update user with username 'raghav' and set 'isVerified' to true
+        const result = await User.updateOne({ username: 'raghav' }, { $set: { isVerified: true } });
+        console.log('User updated:', result);
+    } catch (error) {
+        console.error('Error updating user:', error);
+    }
+}
+
 
 const userController = {
     register,
@@ -256,7 +360,8 @@ const userController = {
     getProfile,
     editProfile,
     getSuggestedUsers,
-    followUnfollow
+    followUnfollow,
+    setLastSeen
 };
 
 export default userController;

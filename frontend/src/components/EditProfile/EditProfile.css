@@ -1,0 +1,178 @@
+.editProfileTitle{
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+.editProfilePage{
+    width: 68vw;
+}
+.editUserPhoto img{
+    height: 3rem;
+    width: 3rem;
+}
+.editBlueTick{
+    height: 2rem;
+    width: 2rem;
+}
+.editItemLeft{
+    display: flex;
+    align-items: center;
+}
+.editItemLeft img{
+    margin-right: 0.5rem;
+}
+.editItemRight{
+    display: flex;
+    align-items: center;
+}
+.editUserUsername{
+    font-size: 1.3rem;
+    font-family: Pacifico;
+}
+.editUserPhoto{
+    display: flex;
+    align-items: center;
+}
+.editUserInfo1{
+    background-color: #0000003b;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    /* padding-bottom: 0.5rem; */
+    display: flex;
+    justify-content: space-between;
+}
+.editUserInfo2{
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+.editForm{
+    margin-top: 1rem;
+    border: 2px solid black;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-direction: column;
+    max-width: 50vw;
+}
+#editBioTextArea{
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    border: 2px solid black;
+    width: 40vw;
+    resize: none;
+}
+.editBioLabel,.editGenderLabel,.editPostPrefLabel{
+    font-weight: 500;
+}
+#editBioGender{
+    background-color: white;
+    padding: 0.3rem;
+    border: 2px solid black;
+    border-radius: 0.5rem;
+}
+option{
+    border-radius: 0.5rem;
+}
+.updateUserInfo{
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+}
+.updateProfileBtn{
+    background-color: #0095F6;
+    font-weight: bold;
+    color: white;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.editPostPrefLabel abbr{
+    text-decoration: none;
+    cursor:pointer;
+}
+.switch {
+    border: 3px solid black;
+    border-radius: 34px;
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+  
+  /* Hide default HTML checkbox */
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  /* The slider */
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ED4956;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  input:checked + .slider {
+    background-color: #0095F6;
+  }
+  
+  input:focus + .slider {
+    box-shadow: 0 0 1px #0095F6;
+  }
+  
+  input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  }
+  
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 34px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  }
+
+@media only screen and (max-width: 767px) {
+    .editForm{
+        min-width: min-content;
+    }
+    .editProfilePage{
+        flex-direction: column;
+        display: flex;
+        /* height: min-content; */
+        margin-top: 11vh;
+        width: 100vw;
+        /* justify-content: center; */
+        align-items: center;
+    }
+    .editProfileTitle{
+        margin-left: 1rem;
+    }
+    #editBioTextArea{
+        width: 70vw;
+    }
+}

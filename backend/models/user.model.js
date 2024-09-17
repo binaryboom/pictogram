@@ -6,11 +6,13 @@ const userSchema = new mongoose.Schema({
     password: { type: String, required: true },
     bio: { type: String, default: '' },
     profilePicture: { type: String, default: '' },
-    gender: { type: String, enum: ['male', 'female'] },
+    gender: { type: String, enum: ['Male', 'Female'] },
     followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
     saved: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
+    isVerified:{ type: Boolean, default: false },
+    lastSeen:{type:Date}
 }, { timestamps: true })
 
 const User = mongoose.model('User', userSchema);

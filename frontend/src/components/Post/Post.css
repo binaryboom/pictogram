@@ -1,28 +1,36 @@
 @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
 
 .postCard {
+    position: relative;
     display: flex;
     flex-direction: column;
     height: max-content;
     width: max-content;
     border: 2px solid black;
     border-radius: 1rem;
-    padding: 0.5rem;
+    padding: 0.8rem;
 }
 
 .postCard i {
     padding: 0.2rem;
     cursor: pointer;
 }
-.postButtons i:hover{
-   background-color:black;
-   color: white;
-   border-radius: 0.5rem;
+
+.postButtons i:hover {
+    background-color: #0000001A;
+    /* color: white; */
+    border-radius: 0.5rem;
+}
+
+.fa-ellipsis{
+    margin-left: 0.4rem;
 }
 
 .postPhoto img {
+
     height: 45vh;
-    width: 25vw;
+    width: 30vw;
+    /* width: 25vw; */
 }
 
 .postButtons {
@@ -49,10 +57,11 @@
     display: flex;
     justify-content: space-between;
     border-bottom: 1px solid black;
+    margin-bottom: 0.3rem;
 }
 
 .userInfo .postCardLeft {
-    justify-content: flex-start; 
+    justify-content: flex-start;
     align-items: flex-start;
     gap: 0.5rem;
 }
@@ -71,19 +80,22 @@
 }
 
 .dialog {
+    border-radius: 0.5rem;
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(255, 255, 255,0.95); 
+    background-color: rgba(255, 255, 255, 0.95);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    z-index: 2000; /* Ensures the dialog appears above other content */
+    z-index: 2000;
+    /* Ensures the dialog appears above other content */
 }
-.dialogBox{
+
+.dialogBox {
     border: 2px solid black;
     border-radius: 1rem;
     gap: 1rem;
@@ -91,7 +103,9 @@
     flex-direction: column;
     justify-content: space-evenly;
     padding: 1.5rem;
+    /* background-color: white; */
 }
+
 .dialogItem {
     cursor: pointer;
     text-align: center;
@@ -105,18 +119,21 @@
     border-radius: 0.5rem;
     background-color: #0000000D;
 }
-.createComment{
+
+.createComment {
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
-.createComment input{
+
+.createComment input {
     margin-top: 0.3rem;
     border: none;
     width: 16vw;
-    border-bottom:2px solid black ;
+    border-bottom: 2px solid black;
 }
-.postCommentBtn{
+
+.postCommentBtn {
     /* padding-right: 0.2rem; */
     background-color: #0095F6;
     font-weight: bold;
@@ -124,33 +141,118 @@
     border: none;
     cursor: pointer;
     border-radius: 0.5rem;
+    font-size: 0.8rem;
 
 }
-.likeCount,.caption,.allComments{
+
+.likeCount,
+.caption,
+.viewAllComments {
     font-size: 0.9rem;
     font-weight: 500;
 }
-.likeCount{
+
+.likeCount {
     font-weight: 600;
 }
-.allComments{
+
+.viewAllComments {
+    padding-top: 0.2rem;
     cursor: pointer;
 }
-.caption{
+
+.caption {
     font-family: 'Pacifico';
 }
-.caption span{
+
+.caption span {
     font-family: 'Pacifico';
     font-size: 1.1rem;
 }
+
+.postCreationTime {
+    font-size: 0.6rem;
+    /* margin-left: 1rem;
+    padding-top: 0.2rem; */
+    font-weight: 500;
+    margin-left: 0.7rem;
+}
+
+.postUserFollow {
+    margin-left: 1.1rem;
+    /* padding-top: 0.2rem; */
+    font-weight: bold;
+    font-size: 0.7rem;
+    cursor: pointer;
+}
+
+.otherinfo {
+    /* padding-left: 2rem !important; */
+    display: flex;
+    flex-direction: column;
+    /* justify-content: flex-end; */
+    /* align-items: center; */
+}
+.postBlueTick img{
+    height: 1.5rem;
+    width: 1.5rem;
+    cursor: pointer;
+}
+
+/* aside{
+    top: 1vh;
+    left: 0;
+    position: absolute;
+    max-width: 100%;
+} */
+/* em-emoji-picker{
+    top: 1vh;
+    left: 0;
+    position: absolute;
+    max-width: 100%;
+} */
+.scroll{
+    overflow-y: scroll !important;
+}
+#preview{
+    display: none !important;
+}
+
 @media only screen and (max-width: 767px) {
+   
     .postPhoto img {
         height: 35vh;
         width: 80vw;
-        /* max-width: 400px; */
+        max-width: 400px;
     }
-    
-   .createComment input{
-    width: 58vw;
-   }
+
+    .postCard {
+        max-width: 400px;
+    }
+
+    .createComment input {
+        width: 58vw;
+        max-width: 300px;
+    }
+
+    .postCreationTime {
+        font-size: 0.65rem;
+    }
+
+    .postUserFollow {
+        font-size: 0.9rem;
+    }
+}
+
+@media screen and (min-width: 450px) {
+    .postPhoto img {
+        height: 47vh;
+    }
+}
+
+@media (min-width: 767px) and (max-width: 1000px) {
+    .postPhoto img {
+        width: 50vw;
+        min-height: 300px;
+    }
 }

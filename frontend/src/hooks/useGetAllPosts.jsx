@@ -26,8 +26,7 @@ const useGetAllPosts = () => {
             showAlert(res)
         }
         finally {
-            res.success ? (dispatch(setPosts(res.allPosts))) : null
-            // showAlert(res)
+            res.success ? (dispatch(setPosts(res.allPosts))) : showAlert(res)
             setLoading(false)
         }
     }

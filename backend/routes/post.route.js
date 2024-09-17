@@ -13,7 +13,7 @@ router.route('/:id').get(postController.getPostById);
 router.route('/:id/likeUnlike').post(isAuthenticated,postController.likeUnlike);
 router.route('/:id/like').get(isAuthenticated,postController.likePost);
 router.route('/:id/unlike').get(isAuthenticated,postController.unlikePost);
-router.route('/:id/newComment').get(isAuthenticated,postController.addComment);
+router.route('/:id/newComment').post(isAuthenticated,postController.addComment);
 router.route('/:id/comment/all').get(isAuthenticated,postController.getCommentsByPost);
 router.route('/:id/delete').delete(isAuthenticated,postController.deletePost);
 router.route('/:id/handleSavedPost').get(isAuthenticated,postController.handleSavedPost);

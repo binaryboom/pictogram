@@ -4,6 +4,7 @@ import Post from '../models/post.model.js'
 import User from '../models/user.model.js'
 import Comment from '../models/comment.model.js'
 import mongoose from "mongoose";
+import { getReceiverSocketId, io } from "../socket/socket.js";
 
 const handleError = (res, statusCode, message) => {
     return res.status(statusCode).json({
@@ -33,6 +34,22 @@ const createPost = async (req, res) => {
         const fileUri = `data:image/jpeg;base64,${optimizedImageBuffer.toString('base64')}`;
         const cloudResp = await cloudinary.uploader.upload(fileUri)
 
+        // //gpt
+        // const imageFormat = image.mimetype.split('/')[1]; // e.g., 'jpeg', 'png'
+
+        // // Optimize image quality and size while preserving original format
+        // const optimizedImageBuffer = await sharp(image.buffer)
+        //     .resize({ height: 800, width: 800, fit: 'inside' })
+        //     .toFormat(imageFormat, { quality: 80 })
+        //     .toBuffer();
+
+        // const fileUri = `data:image/${imageFormat};base64,${optimizedImageBuffer.toString('base64')}`;
+        // const cloudResp = await cloudinary.uploader.upload(fileUri, {
+        //     resource_type: 'auto' // Automatically detects the file type
+        // });
+        // //gpt ends
+
+
         const post = await Post.create({
             author: authorId,
             caption,
@@ -55,9 +72,9 @@ const createPost = async (req, res) => {
 
         user.posts.push(post._id);
         await user.save()
-        // .catch(()=>{
-        //     handleError(res,400,'Unable to save post , please retry !!')
-        // })
+            .catch(() => {
+                handleError(res, 400, 'Unable to save post , please retry !!')
+            })
 
         await post.populate({ path: 'author', select: '-password' });
         return res.status(200).json({
@@ -78,8 +95,8 @@ const createPost = async (req, res) => {
 const getAllPosts = async (req, res) => {
     try {
         const allPosts = await Post.find().sort({ createdAt: -1 })
-            .populate({ path: 'author', select: 'username profilePicture' })
-            .populate({ path: 'comments', select: 'username profilePicture' })
+            .populate({ path: 'author', select: 'username profilePicture isVerified' })
+            .populate({ path: 'comments', select: 'username profilePicture isVerified' })
         return res.status(200).json({
             success: true,
             allPosts
@@ -121,8 +138,16 @@ const getPostById = async (req, res) => {
             });
         }
         const post = await Post.findOne({ _id: postId })
-            .populate({ path: 'author', select: 'username profilePicture' })
-            .populate({ path: 'comments', select: 'username profilePicture' })
+            .populate({ path: 'author', select: 'username profilePicture isVerified' })
+            .populate({
+                path: 'comments', // Populate the comments field
+                populate: {
+                    path: 'author', // Within each comment, populate the author field
+                    select: 'username profilePicture isVerified' // Select the fields you want from the User model
+                },
+                options: { sort: { createdAt: -1 } }
+            })
+        // .populate({ path: 'comments', select: 'username profilePicture' })
 
         if (!post) {
             return res.status(404).json({
@@ -169,17 +194,43 @@ const likeUnlike = async (req, res) => {
         if (isLiked) {
             // doUnlike
             await post.updateOne({ $pull: { likes: mainUserId } })
+            const postLikes = await Post.findById(postId).select('likes')
+            if(post.author.toString()!==mainUserId){
+                const notification={
+                    type:'unlike',
+                    user:mainUser,
+                    postId,
+                    message: `Your post is unliked by ${mainUser.username}`
+                }
+                const postAuthorSocketId=getReceiverSocketId(post.author.toString())
+                io.to(postAuthorSocketId).emit('notifications',notification)
+            }
             return res.status(200).json({
                 success: true,
-                message: 'Post unliked successfully !!'
+                message: 'Post unliked successfully !!',
+                postLikes
             });
         }
         else {
             // do Like
             await post.updateOne({ $addToSet: { likes: mainUserId } })
+            const postLikes = await Post.findById(postId).select('likes')
+            const mainUser=await User.findById(mainUserId).select('username profilePicture')
+            // if(post.author._id)
+            if(post.author.toString()!==mainUserId){
+                const notification={
+                    type:'like',
+                    user:mainUser,
+                    postId,
+                    message: `Your post is liked by ${mainUser.username}`
+                }
+                const postAuthorSocketId=getReceiverSocketId(post.author.toString())
+                io.to(postAuthorSocketId).emit('notifications',notification)
+            }
             return res.status(200).json({
                 success: true,
-                message: 'Post liked successfully !!'
+                message: 'Post liked successfully !!',
+                postLikes
             });
         }
 
@@ -252,6 +303,7 @@ const addComment = async (req, res) => {
         const postId = req.params.id;
         const mainUser = req.id;
         const text = req.body.text;
+        // console.log(req.body)
         if (!text) {
             return res.status(400).json({
                 success: false,
@@ -264,14 +316,24 @@ const addComment = async (req, res) => {
             post: postId,
             author: mainUser
         })
-            .populate({ path: 'author', select: 'username profilePicture' })
+        // .populate({ path: 'author', select: 'username profilePicture' })
 
         post.comments.push(comment._id)
         await post.save()
-
+        const postComments = await Post.findById(postId)
+            .select('comments')
+            .populate({
+                path: 'comments', // Populate the comments field
+                populate: {
+                    path: 'author', // Within each comment, populate the author field
+                    select: 'username profilePicture isVerified' // Select the fields you want from the User model
+                },
+                options: { sort: { createdAt: -1 } } // Use the 'options' field to specify sorting
+            })
+            
         return res.status(201).json({
             success: true,
-            comment,
+            postComments,
             message: 'Commented successfully !!'
         });
 
@@ -287,7 +349,7 @@ const addComment = async (req, res) => {
 const getCommentsByPost = async (req, res) => {
     try {
         const postId = req.params.id;
-        const allComments = await Comment.find({ post: postId }).populate({ path: 'user', select: 'username profilePicture' })
+        const allComments = await Comment.find({ post: postId }).populate({ path: 'user', select: 'username profilePicture isVerified' })
         if (!allComments) {
             return res.status(404).json({
                 success: false,
@@ -374,17 +436,23 @@ const handleSavedPost = async (req, res) => {
         if (user.saved.includes(postId)) {
             // unsave
             await user.updateOne({ $pull: { saved: postId } })
+            const userSaved = await User.findById(userId).select('saved')
+            // console.log(userSaved)
             return res.status(200).json({
                 success: true,
-                message: 'Post unsaved !!'
+                message: 'Post unsaved !!',
+                userSaved
             });
         }
         else {
             //save
             await user.updateOne({ $push: { saved: postId } })
+            const userSaved = await User.findById(userId).select('saved')
+            // console.log(userSaved)
             return res.status(200).json({
                 success: true,
-                message: 'Post saved !!'
+                message: 'Post saved !!',
+                userSaved
             });
         }
     } catch (error) {

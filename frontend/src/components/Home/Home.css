@@ -4,3 +4,13 @@
     align-items: center;
     width: 100%;
 }
+@media (max-width: 1000px) {
+    .forPC {
+      display: none;
+    }
+  }
+@media (min-width: 1000px) {
+    .forMobile {
+      display: none;
+    }
+  }

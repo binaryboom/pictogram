@@ -1,0 +1,216 @@
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
+.profilePage {
+    /* height: 100%; */
+    /* width: 100%; */
+    width: 68vw;
+    /* width: 68vw; */
+}
+
+.fixed {
+    position: fixed;
+    background-color: white;
+    top: 0;
+    padding-top: 2vh;
+    right: 0;
+    /* max-width: 900px; */
+    left: 25vw;
+    /* left: 50%; */
+}
+
+.profileContainer {
+    left: 0;
+    padding: 0.3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    /* align-items: center; */
+}
+
+.profileUserInfo {
+    align-items: center;
+    display: flex;
+    gap: 1rem;
+    /* justify-content: space-evenly; */
+}
+
+.profileUserInfo img {
+    height: 7rem;
+    width: 7rem;
+}
+
+.profileOtherInfo {
+    /* border-bottom: 2px solid black; */
+    font-weight: bold;
+    margin-top: 2rem;
+    display: flex;
+    justify-content: space-around;
+    gap: 1rem;
+    /* margin-bottom: 1rem; */
+}
+
+.profileOtherInfo>div {
+    cursor: pointer;
+}
+
+.profileItemsRight {
+    display: flex;
+    gap: 1rem;
+    flex-direction: column;
+}
+
+.subItemsRight {
+    align-items: center;
+    gap: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.profilePostContainer {
+    /* height: 100vh; */
+    /* max-height: 640px; */
+    /* min-height: 40vh; 
+    max-height: 70vh; */
+    margin-top: 35vh;
+    overflow: scroll;
+    padding: 0.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: start;
+
+}
+
+.profileUsername {
+    font-family: Pacifico;
+    font-size: 1.2rem;
+}
+
+.profilePostCard {
+    cursor: pointer;
+    align-self: start;
+}
+
+.profilePostCard img {
+    height: 45vh;
+    width: 20vw;
+}
+
+.profilePostOptions {
+    margin: 0.7rem;
+    display: flex;
+    justify-content: space-around;
+    border: 2px solid black;
+    border-radius: 0.5rem;
+    /* padding-top: 0.4rem; */
+    /* padding-bottom: 0.4rem; */
+}
+
+.profilePostOptions div {
+    padding: 0.4rem;
+    cursor: pointer;
+}
+
+.editProfileBtn {
+    cursor: pointer;
+    color: white;
+    background-color: #0095F6;
+    font-weight: bold;
+    font-size: 0.8rem;
+    border-radius: 0.5rem;
+}
+
+.profileUserFollowBtn button {
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.8rem;
+    border-radius: 0.5rem;
+}
+
+.profileBlueTick img {
+    height: 1.5rem;
+    width: 1.5rem;
+}
+
+.profileBlueTick img {
+    cursor: pointer;
+    margin: 0 !important;
+}
+
+.activeProfileIcon {
+    background-color: #0000003b;
+    border-radius: 0.5rem;
+}
+
+.profileBio {
+    font-weight: 500;
+    white-space: pre-wrap;
+    max-height: 4rem;
+    overflow-y: scroll;
+}
+
+.profileMsgBtn {
+    color: white;
+    background-color: #0095F6;
+    font-weight: bold;
+}
+
+.profileOtherInfo {
+    margin-top: 1rem;
+}
+
+@media (max-height:800px) and (max-width: 767px) {
+    .profilePostContainer {
+        margin-top: 40vh;
+        /* margin-top: 45vh; */
+    }
+}
+
+@media (min-height:800px) and (min-width: 768px) {
+    .profilePostContainer {
+        margin-top: 22vh;
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    .profileUsername{
+        width: 100%;
+        
+    }
+    .profileOtherInfo {
+        margin-top: 0.5rem;
+    }
+
+    .notForMobText {
+        display: none;
+    }
+
+    .profilePage {
+        width: 100%;
+    }
+
+    .profilePostCard img {
+        height: 25vh;
+        width: 40vw;
+    }
+
+    .fixed {
+        /* top: 10vh; */
+        /* margin-top: 15vh; */
+        padding-top: 11vh;
+        right: 0;
+        left: 0;
+        overflow-y: scroll;
+        /* max-height: 30vh; */
+    }
+
+    .profilePostContainer {
+        margin-bottom: 7vh;
+        justify-content: center;
+    }
+
+    .profileUserInfo img {
+        margin-left: 1rem;
+    }
+}
