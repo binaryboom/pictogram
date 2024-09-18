@@ -43,7 +43,7 @@ const Chat = () => {
     }
   };
   const properties = {
-    apiUrl, setLoading, navigate, showAlert, dispatch, user, text, setText,recentChats,selectedChat, setRecentChats, setAllUsers, setMessages
+    apiUrl, setLoading, navigate, showAlert, dispatch, user, text, setText,recentChats,selectedChat, setRecentChats, setAllUsers, setMessages,setSelectedChat,allUsers
   }
 
   const [dialog, showDialog] = useState(false);
@@ -94,9 +94,9 @@ const Chat = () => {
     console.log('onlineUsers changed:', onlineUsers);
     ChatFunc.getAllUsers(properties);
     ChatFunc.getRecentChats(properties);
-    if(selectedChat){
-      handleChatClick(selectedChat)
-    }
+    // if(selectedChat){
+    //   handleChatClick(selectedChat)
+    // }
   }, [onlineUsers])
 
 

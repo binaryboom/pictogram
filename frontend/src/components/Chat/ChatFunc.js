@@ -7,7 +7,7 @@ import { setPosts } from "../../redux/postSlice";
 
 
 const sendMsg = async (receiverId, properties) => {
-    const { apiUrl, setLoading, navigate, showAlert, dispatch, user, text, setText, setMessages,recentChats,setRecentChats,selectedChat } = properties;
+    const { apiUrl, showAlert,text, setText, setMessages, recentChats, setRecentChats, selectedChat,setSelectedChat } = properties;
     let res;
     try {
         console.log(selectedChat)
@@ -30,18 +30,21 @@ const sendMsg = async (receiverId, properties) => {
     }
     finally {
         // res.success? (handleCreatePost(),navigate('/') ):null
-        if (res.success ) {
-            setMessages((prev=[])=>(
-                [...prev,res.newMsg]
+        if (res.success) {
+            setMessages((prev = []) => (
+                [...prev, res.newMsg]
             ))
             setText('');
-            if (recentChats.map((rc)=>(rc._id === selectedChat._id))) {
+            if (recentChats.map((rc) => (rc._id === selectedChat._id))) {
                 // Update recentChats
-    
+                setSelectedChat((prevSelectedChat) => ({
+                    ...prevSelectedChat,
+                    lastSeen: userToUpdate.lastSeen,
+                }));
                 setRecentChats((prev) => [selectedChat, ...prev.filter((rc) => rc._id !== selectedChat._id)]);
-              }
+            }
         }
-        else{
+        else {
 
             showAlert(res)
         }
@@ -70,7 +73,7 @@ const getAllMsg = async (receiverId, properties) => {
         if (res.success) {
             setMessages(res.newMsg.message)
         }
-        else{
+        else {
 
             showAlert(res)
         }
@@ -79,7 +82,7 @@ const getAllMsg = async (receiverId, properties) => {
 }
 
 const getRecentChats = async (properties) => {
-    const { apiUrl, setLoading, navigate, showAlert, dispatch, user, setRecentChats } = properties;
+    const { apiUrl, setLoading, navigate, showAlert, dispatch, user, setRecentChats, selectedChat ,setSelectedChat} = properties;
     let res;
     try {
         // setLoading(true)
@@ -103,7 +106,15 @@ const getRecentChats = async (properties) => {
             //     dispatch(setAuthUser({...user,bio:res.user.bio,gender:res.user.gender,profilePicture:res.user.profilePicture}))
             // }
             setRecentChats(res.users)
-            setOfflineUsers(res.users)
+            const userToUpdate = res.users.find((rc) => rc._id === selectedChat._id);
+            if (userToUpdate) {
+                // Create a new object to avoid directly mutating the state
+                setSelectedChat((prevSelectedChat) => ({
+                    ...prevSelectedChat,
+                    lastSeen: userToUpdate.lastSeen,
+                }));
+            }
+            // setOfflineUsers(res.users)
         }
         else {
             showAlert(res)
@@ -111,7 +122,7 @@ const getRecentChats = async (properties) => {
     }
 }
 const getAllUsers = async (properties) => {
-    const { apiUrl, setLoading, navigate, showAlert, dispatch, user, setAllUsers } = properties;
+    const { apiUrl, setLoading, navigate, showAlert, dispatch, user, setAllUsers, selectedChat, allUsers, setSelectedChat } = properties;
     let res;
     try {
         // setLoading(true)
@@ -135,6 +146,14 @@ const getAllUsers = async (properties) => {
             //     dispatch(setAuthUser({...user,bio:res.user.bio,gender:res.user.gender,profilePicture:res.user.profilePicture}))
             // }
             setAllUsers(res.allUsers)
+            const userToUpdate = res.allUsers.find((rc) => rc._id === selectedChat._id);
+            if (userToUpdate) {
+                // Create a new object to avoid directly mutating the state
+                setSelectedChat((prevSelectedChat) => ({
+                    ...prevSelectedChat,
+                    lastSeen: userToUpdate.lastSeen,
+                }));
+            }
             // setOfflineUsers(res.allUsers)
         }
         else {
