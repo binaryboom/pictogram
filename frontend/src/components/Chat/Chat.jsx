@@ -43,7 +43,7 @@ const Chat = () => {
     }
   };
   const properties = {
-    apiUrl, setLoading, navigate, showAlert, dispatch, user, text, setText, setRecentChats, setAllUsers, setMessages
+    apiUrl, setLoading, navigate, showAlert, dispatch, user, text, setText,recentChats,selectedChat, setRecentChats, setAllUsers, setMessages
   }
 
   const [dialog, showDialog] = useState(false);
@@ -79,10 +79,6 @@ const Chat = () => {
     setSelectedChat(chat);
   }
   const handleBackButtonClick = () => {
-    if (!recentChats.map((rc)=>(rc._id === selectedChat._id))) {
-      // Update recentChats
-      setRecentChats((prev) => [selectedChat, ...prev]);
-    }
     // Set selectedChat to null after updating recentChats
     setSelectedChat(null);
   };
@@ -206,11 +202,11 @@ const Chat = () => {
               <div className="chatRightCard1">
                 <div className="chatRightCardLeft" >
                   <div onClick={() => { handleBackButtonClick() }} className="mobBackBtn"><i className="fa-xl fa-solid fa-circle-left"></i></div>
-                  <div onClick={() => { navigate(`/profile/${selectedChat.username}`) }} className="chatRightUserPhoto"><img draggable='false' src={'/person.png'} alt="photo" /></div>
+                  <div onClick={() => { navigate(`/profile/${selectedChat.username}`) }} className="chatRightUserPhoto"><img draggable='false' src={selectedChat.profilePicture||'/person.png'} alt="photo" /></div>
                 </div>
                 <div className="chatRightCardRight">
                   <div onClick={() => { navigate(`/profile/${selectedChat.username}`) }} className="chatRightCardUserUsername">{selectedChat.username}
-                    {selectedChat.isVerified === 'true' && <abbr title="Founder (Pictogram)"><img className="chatBlueTick" src="/verified.png" alt="" /></abbr>}
+                    {selectedChat.isVerified && <abbr title="Founder (Pictogram)"><img className="chatBlueTick" src="/verified.png" alt="" /></abbr>}
                   </div>
 
                   <div style={{ color: isUserOnline(selectedChat._id) ? 'green' : 'red' }} className="chatRightCardLastSeen">{isUserOnline(selectedChat._id) ? 'online' : `${getUserLastSeen(selectedChat.lastSeen)}`}</div>
@@ -292,7 +288,7 @@ const Chat = () => {
               <textarea onKeyDown={handleKeyDown} value={text} onChange={handleInput} type='text' placeholder='Message......' />
               {/* </div> */}
               {/* <div className="chatRightCardRight"> */}
-              {text && <button onClick={() => { ChatFunc.sendMsg(selectedChat._id, properties) }} className='sendMsgBtn'>Send</button>}
+              {text && <button onClick={() => {  ChatFunc.sendMsg(selectedChat._id, properties)}} className='sendMsgBtn'>Send</button>}
               {/* </div> */}
             </div>
           </>

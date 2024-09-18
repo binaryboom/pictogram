@@ -1,0 +1,48 @@
+.notifications{
+    margin-left: 20vw;
+    position: relative;
+}
+
+.notificationRightCorner{
+    position: absolute;
+    right: 10vh;
+    top: 3vh;
+}
+.notifications .dialogBox{
+   max-height: 80%;
+   overflow: scroll;
+   scrollbar-color: black;
+   scrollbar-width: 1rem;
+    background-color: white !important;
+}
+
+.notificationCard{
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    display: flex;
+    padding: 0.3rem;
+}
+
+.notificationCard .itemLeft,.notificationCard .itemRight{
+    display: flex;
+    gap: 0.3rem;
+    cursor: pointer;
+    align-items: center;
+}
+
+.notificationMsg{
+    font-weight: bold;
+    font-size: 0.8rem;
+    margin-left: 0.3rem;
+}
+
+@media only screen and (max-width: 767px) {
+.notifications{
+    /* margin-top: 10vh;
+    margin-bottom: 8vh; */
+    margin-left: 0;
+}
+.notificationRightCorner{
+    right: 2vh;
+}
+}

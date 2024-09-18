@@ -19,33 +19,34 @@ import { setMsgNotification } from './redux/rtnMsg'
 import { setFollowNotification } from './redux/rtnFollow'
 import { setOfflineUsers } from './redux/offlineSlice'
 import { useApi } from './context/apiContext'
+import ProtectedRoute from './components/MainLayout/ProtectedRoute'
 
 
 function App() {
   const browserRouter = createBrowserRouter([
     {
       path: '/',
-      element: <MainLayout />,
+      element: <ProtectedRoute> <MainLayout /> </ProtectedRoute>,
       children: [
         {
           path: '/',
-          element: <Home2 />
+          element: <ProtectedRoute> <Home2 /></ProtectedRoute>
         },
         {
           path: '/profile/:username',
-          element: <Profile />
+          element:<ProtectedRoute> <Profile /></ProtectedRoute>
         },
         {
           path: '/profile/edit',
-          element: <EditProfile />
+          element: <ProtectedRoute><EditProfile /></ProtectedRoute>
         },
         {
           path: '/:id',
-          element: <FullPost />
+          element: <ProtectedRoute><FullPost /></ProtectedRoute>
         },
         {
           path: '/chats',
-          element: <Chat />
+          element: <ProtectedRoute> <Chat /></ProtectedRoute>
         },
       ]
     },
@@ -66,7 +67,7 @@ function App() {
   useEffect(() => {
     if (user) {
       console.log(user.isVerified)
-      const socketIo = io('http://192.168.1.45:3000', {
+      const socketIo = io('http://192.168.1.46:3000', {
         query: {
           userId: user?._id,
           username: user?.username, // Add these details
@@ -86,7 +87,7 @@ function App() {
       //   // dispatch(setOfflineUsers(offlineUsers))
        
       //   const setLastSeen = async () => {
-      //     const apiUrl= `http://192.168.1.45:3000/api/v1`;
+      //     const apiUrl= `http://192.168.1.46:3000/api/v1`;
       //     let res;
       //     try {
       //       //   setLoading(true)

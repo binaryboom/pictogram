@@ -1,30 +1,44 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useForm } from "react-hook-form"
 import '../Signup/Signup.css'
 import Logo from '../Logo/Logo'
 import { useApi } from '../../context/apiContext'
 import { useAlert } from '../../context/AlertContext'
-import { Link ,Navigate, useNavigate} from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { Link ,Navigate, useLocation, useNavigate} from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 import { setAuthUser } from '../../redux/authSlice.js'
 
 const Login = () => {
+  const location = useLocation();
+  const data = location.state; 
+  console.log(data)
   const dispatch=useDispatch()
   const navigate=useNavigate()
   const { showAlert } = useAlert();
   const [loading, setLoading] = useState(false);
   const apiUrl = useApi()
-  console.log(apiUrl)
+  // console.log(apiUrl)
+  const {user}=useSelector(store=>store.auth)
   const {
     register,
     handleSubmit,
     watch,
     reset,
     getValues,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm()
-
+ 
+  useEffect(()=>{
+    if(user){
+      navigate('/')
+    }
+    if (data) {
+      setValue('usernameEmail', data);
+    }
+  },[])
+  
   const onSubmit = async (data) => {
     console.log(data)
     let res;

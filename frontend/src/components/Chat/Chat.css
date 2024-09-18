@@ -16,6 +16,7 @@
     margin-bottom: 0.3rem;
 } */
 .chatPageLeft {
+    overflow-y: scroll;
     position: relative;
     /* height: 90vh; */
     padding: 0.5rem;
@@ -172,7 +173,7 @@
     flex-direction: column;
     gap: 0.5rem;
     max-height: 90%;
-    overflow-y: auto;
+    overflow-y: scroll;
 }
 
 .allChatsTitle {

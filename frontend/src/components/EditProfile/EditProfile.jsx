@@ -9,11 +9,11 @@ import { setAuthUser } from '../../redux/authSlice';
 
 const EditProfile = () => {
     const { user } = useSelector(store => store.auth)
-    const [bio, setBio] = useState(user.bio || '');
-    const [gender, setGender] = useState(user.gender || 'undefined');
-    const [showAllPosts, setShowAllPosts] = useState(true); // default value
     const navigate = useNavigate();
     const dispatch = useDispatch()
+    const [bio, setBio] = useState(user?.bio || '');
+    const [gender, setGender] = useState(user?.gender || 'undefined');
+    const [showAllPosts, setShowAllPosts] = useState(true); // default value
     const apiUrl = useApi()
     const [loading, setLoading] = useState(false);
     const { showAlert } = useAlert();
@@ -59,12 +59,15 @@ const EditProfile = () => {
             // res.success? (handleCreatePost(),navigate('/') ):null
             if (res.success) {
                 dispatch(setAuthUser(res.user));
-                navigate(`/profile/${res.user.username}`)
+                navigate(`/profile/${res.user?.username}`)
             }
 
             showAlert(res)
             setLoading(false)
         }
+    }
+    if (!user) {
+        return navigate('/login')
     } 
     return (
         <div className="editProfilePage">
@@ -78,9 +81,9 @@ const EditProfile = () => {
 
                 <div className="editUserInfo1">
                     <div className="editItemLeft">
-                        <div className="editUserPhoto"><img draggable='false' src={imagePreview || user.profilePicture || '/person.png'} alt="photo" /></div>
-                        <div className="editUserUsername">{user.username}</div>
-                        {user.isVerified && <abbr title="Founder (Pictogram)"><img className="editBlueTick" src="/verified.png" alt="" /></abbr>}
+                        <div className="editUserPhoto"><img draggable='false' src={imagePreview || user?.profilePicture || '/person.png'} alt="photo" /></div>
+                        <div className="editUserUsername">{user?.username}</div>
+                        {user?.isVerified && <abbr title="Founder (Pictogram)"><img className="editBlueTick" src="/verified.png" alt="" /></abbr>}
                     </div>
                     <div className="editItemRight">
                         <div className="createPostPhoto">

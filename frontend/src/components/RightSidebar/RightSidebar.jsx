@@ -23,19 +23,22 @@ const RightSidebar = () => {
     apiUrl, setLoading, navigate, showAlert, dispatch, user, setSuggestedUsers
   }
   useEffect(() => {
-    RightSidebarFunc.getSuggestedUsers(properties)
+      RightSidebarFunc.getSuggestedUsers(properties)
   }, [])
+  if(!user){
+   return navigate('/login')
+  }
 
   return (
     <div className='rightSidebar'>
 
       <div className="mainUserInfo container"> 
-        <div onClick={()=>{navigate(`/profile/${user.username}`)}} className="itemLeft">
+        <div onClick={()=>{navigate(`/profile/${user?.username}`)}} className="itemLeft">
           <div className="suggestedUserPhoto">
-            <img draggable='false' src={user.profilePicture || '/person.png'} alt="photo" />
+            <img draggable='false' src={user?.profilePicture || '/person.png'} alt="photo" />
           </div>
-          <div className="suggestedUserUsername">{user.username}</div>
-          {user.isVerified && <div className="postBlueTick"><abbr title="Founder (Pictogram)"><img src="/verified.png" alt="" /></abbr></div>}   
+          <div className="suggestedUserUsername">{user?.username}</div>
+          {user?.isVerified && <div className="postBlueTick"><abbr title="Founder (Pictogram)"><img src="/verified.png" alt="" /></abbr></div>}   
         </div>
         <div className="itemRight">
           <span className='followSuggested' style={{ color: '#0095F6' }}>Switch</span>
@@ -47,15 +50,15 @@ const RightSidebar = () => {
       {suggestedUsers.map((s) => {
         return (
           <div className="otherUserInfo container">
-            <div onClick={()=>{navigate(`/profile/${s.username}`)}} className="itemLeft">
+            <div onClick={()=>{navigate(`/profile/${s?.username}`)}} className="itemLeft">
               <div className="suggestedUserPhoto">
-                <img draggable='false' src={s.profilePicture ||'/person.png'} alt="photo" />
+                <img draggable='false' src={s?.profilePicture ||'/person.png'} alt="photo" />
               </div>
-              <div className="suggestedUserUsername">{s.username}</div>
-              {s.isVerified && <div className="postBlueTick"><abbr title="Founder (Pictogram)"><img src="/verified.png" alt="" /></abbr></div>}   
+              <div className="suggestedUserUsername">{s?.username}</div>
+              {s?.isVerified && <div className="postBlueTick"><abbr title="Founder (Pictogram)"><img src="/verified.png" alt="" /></abbr></div>}   
             </div>
             <div className="itemRight">
-              <span onClick={()=>{PostDialogFunc.followUnfollow(s._id, properties)}} style={{color:user.following.includes(s._id)?'#ED4956':'#0095F6'}} className='followSuggested'>{user.following.includes(s._id)?'Unfollow':'Follow'}</span>
+              <span onClick={()=>{PostDialogFunc.followUnfollow(s?._id, properties)}} style={{color:user?.following.includes(s?._id)?'#ED4956':'#0095F6'}} className='followSuggested'>{user?.following.includes(s?._id)?'Unfollow':'Follow'}</span>
             </div>
           </div>
         )

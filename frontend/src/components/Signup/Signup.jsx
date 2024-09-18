@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useForm } from "react-hook-form"
 import '../Signup/Signup.css'
@@ -6,6 +6,7 @@ import Logo from '../Logo/Logo'
 import { useApi } from '../../context/apiContext'
 import { useAlert } from '../../context/AlertContext'
 import { Link,Navigate,useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 const Signup = () => {
   const navigate=useNavigate();
@@ -13,6 +14,12 @@ const Signup = () => {
   const [loading, setLoading] = useState(false);
   const apiUrl = useApi()
   console.log(apiUrl)
+  const {user}=useSelector(store=>store.auth)
+  useEffect(()=>{
+    if(user){
+      navigate('/')
+    }
+  },[])
   const {
     register,
     handleSubmit,
@@ -51,7 +58,7 @@ const Signup = () => {
       showAlert(res)
     }
     finally {
-      res.success ?( reset(),navigate('/login') ): null
+      res.success ?( reset(),navigate('/login',{state:data.email}) ): null
       showAlert(res)
       setLoading(false)
     }

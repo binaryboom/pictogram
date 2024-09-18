@@ -6,7 +6,7 @@ const app = express()
 const server = new http.createServer(app)
 const io = new Server(server, {
     cors: {
-        origin: ['http://localhost:5173', 'http://192.168.1.45:5173'],
+        origin: ['http://localhost:5173', 'http://192.168.1.46:5173'],
         methods: ['GET', 'POST']
     }
 })
@@ -45,7 +45,7 @@ io.on('connection', (socket) => {
             console.log(`Disconnected \n UserId=${userId} \n SocketId=${socket.id}`);
 
             const setLastSeen = async () => {
-                const apiUrl= `http://192.168.1.45:3000/api/v1`;
+                const apiUrl= `http://192.168.1.46:3000/api/v1`;
                 let res;
                 try {
                   //   setLoading(true)

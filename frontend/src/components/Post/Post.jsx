@@ -54,6 +54,9 @@ const Post = ({ post }) => {
             setText('');
         }
     }
+    if(!user || !post){
+        return navigate('/login')
+       }
 
     return (
 

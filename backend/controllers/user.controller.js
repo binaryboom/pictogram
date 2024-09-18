@@ -278,8 +278,8 @@ const followUnfollow=async (req,res) => {
         const followList=await User.findById(mainUserId).select('followers following')
         const notification={
             type:'unfollow',
-            mainUserId,
-            otherUserId,
+            user:mainUser,
+            otherUser:otherUser.username,
             message: `You got unfollowed by ${mainUser.username}`
         }
         const otherUserSocketId=getReceiverSocketId(otherUserId.toString())
@@ -299,9 +299,9 @@ const followUnfollow=async (req,res) => {
         const followList=await User.findById(mainUserId).select('followers following')
         const notification={
             type:'follow',
-            mainUserId,
-            otherUserId,
-            message: `${mainUser.username} started to follow you`
+            user:mainUser,
+            otherUser:otherUser.username,
+            message: `started to follow you`
         }
         const otherUserSocketId=getReceiverSocketId(otherUserId.toString())
         io.to(otherUserSocketId).emit('followNotification',notification)

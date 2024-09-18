@@ -200,7 +200,7 @@ const likeUnlike = async (req, res) => {
                     type:'unlike',
                     user:mainUser,
                     postId,
-                    message: `Your post is unliked by ${mainUser.username}`
+                    message: ``
                 }
                 const postAuthorSocketId=getReceiverSocketId(post.author.toString())
                 io.to(postAuthorSocketId).emit('notifications',notification)
@@ -222,7 +222,7 @@ const likeUnlike = async (req, res) => {
                     type:'like',
                     user:mainUser,
                     postId,
-                    message: `Your post is liked by ${mainUser.username}`
+                    message: ` liked your post`
                 }
                 const postAuthorSocketId=getReceiverSocketId(post.author.toString())
                 io.to(postAuthorSocketId).emit('notifications',notification)

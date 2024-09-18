@@ -7,7 +7,6 @@ const rtnFollow=createSlice({
     },
     reducers:{
         setFollowNotification:(state,action)=>{
-            console.log(action.payload)
             if(action.payload==null){
                 state.followNotifications=[]
             }
@@ -15,11 +14,11 @@ const rtnFollow=createSlice({
                 state.followNotifications.push(action.payload)
             }
             else if(action.payload.type==='unfollow'){
-                state.followNotifications=state.followNotifications.filter((item) => item.mainUserId !== action.payload.mainUserId)
+                state.followNotifications=state.followNotifications.filter((item) => !(item.user.username === action.payload.user.username && item.otherUser === action.payload.otherUser))
             }
         },
     }
-    // state.likeNotifications=state.likeNotifications.filter((item)=>item.postId!==action.payload.postId && item.user._id !== action.payload.user._id)
+    
 })
 
 export const {setFollowNotification}=rtnFollow.actions;

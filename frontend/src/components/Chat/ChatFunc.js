@@ -7,9 +7,10 @@ import { setPosts } from "../../redux/postSlice";
 
 
 const sendMsg = async (receiverId, properties) => {
-    const { apiUrl, setLoading, navigate, showAlert, dispatch, user, text, setText, setMessages } = properties;
+    const { apiUrl, setLoading, navigate, showAlert, dispatch, user, text, setText, setMessages,recentChats,setRecentChats,selectedChat } = properties;
     let res;
     try {
+        console.log(selectedChat)
         //   setLoading(true)
         let req = await fetch(`${apiUrl}/message/sendMsg/${receiverId}`, {
             method: 'POST',
@@ -34,6 +35,11 @@ const sendMsg = async (receiverId, properties) => {
                 [...prev,res.newMsg]
             ))
             setText('');
+            if (recentChats.map((rc)=>(rc._id === selectedChat._id))) {
+                // Update recentChats
+    
+                setRecentChats((prev) => [selectedChat, ...prev.filter((rc) => rc._id !== selectedChat._id)]);
+              }
         }
         else{
 
