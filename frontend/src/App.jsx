@@ -67,7 +67,7 @@ function App() {
   useEffect(() => {
     if (user) {
       console.log(user.isVerified)
-      const socketIo = io('http://192.168.1.46:3000', {
+      const socketIo = io(process.env.URL, {
         query: {
           userId: user?._id,
           username: user?.username, // Add these details
