@@ -94,7 +94,9 @@ const Chat = () => {
     console.log('onlineUsers changed:', onlineUsers);
     ChatFunc.getAllUsers(properties);
     ChatFunc.getRecentChats(properties);
-    handleChatClick(selectedChat)
+    if(selectedChat){
+      handleChatClick(selectedChat)
+    }
   }, [onlineUsers])
 
 
