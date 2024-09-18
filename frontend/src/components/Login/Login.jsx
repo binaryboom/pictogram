@@ -18,7 +18,7 @@ const Login = () => {
   const { showAlert } = useAlert();
   const [loading, setLoading] = useState(false);
   const apiUrl = useApi()
-  // console.log(apiUrl)
+  console.log(apiUrl)
   const {user}=useSelector(store=>store.auth)
   const {
     register,

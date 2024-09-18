@@ -6,7 +6,7 @@ export const useApi = () => {
 }
 export const ApiProvider = ({ children }) => {
     // const [apiUrl] = useState('http://localhost:3000/api/v1')
-    const [apiUrl] = useState(`${process.env.URL}/api/v1`)
+    const [apiUrl] = useState(`https://pictogram-wqnp.onrender.com/api/v1`)
     return (
         <apiContext.Provider value={apiUrl} >
             { children }
