@@ -22,6 +22,8 @@ const getUserProfile = async (username,properties) => {
         res = { success: false, message: 'Unable to connect with server' }
         console.log(error)
         showAlert(res)
+        setLoading(false)
+        navigate('/')
     }
     finally {
         setLoading(false)

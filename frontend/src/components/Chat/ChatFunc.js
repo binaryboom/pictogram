@@ -7,7 +7,7 @@ import { setPosts } from "../../redux/postSlice";
 
 
 const sendMsg = async (receiverId, properties) => {
-    const { apiUrl, showAlert,text, setText, setMessages, recentChats, setRecentChats, selectedChat,setSelectedChat } = properties;
+    const { apiUrl, showAlert, text, setText, setMessages, recentChats, setRecentChats, selectedChat, setSelectedChat } = properties;
     let res;
     try {
         console.log(selectedChat)
@@ -35,13 +35,19 @@ const sendMsg = async (receiverId, properties) => {
                 [...prev, res.newMsg]
             ))
             setText('');
-            if (recentChats.map((rc) => (rc._id === selectedChat._id))) {
-                // Update recentChats
-                setSelectedChat((prevSelectedChat) => ({
-                    ...prevSelectedChat,
-                    lastSeen: rc.lastSeen,
+            const chatToUpdate = recentChats.find((rc) => rc._id === selectedChat._id);
+            if (chatToUpdate) {
+                // Update selectedChat
+                setSelectedChat((prev) => ({
+                    ...prev,
+                    lastSeen: chatToUpdate.lastSeen,
                 }));
-                setRecentChats((prev) => [selectedChat, ...prev.filter((rc) => rc._id !== selectedChat._id)]);
+
+                // Update recentChats
+                setRecentChats((prev) => [
+                    { ...selectedChat, lastSeen: chatToUpdate.lastSeen },
+                    ...prev.filter((rc) => rc._id !== selectedChat._id),
+                ]);
             }
         }
         else {
@@ -82,7 +88,7 @@ const getAllMsg = async (receiverId, properties) => {
 }
 
 const getRecentChats = async (properties) => {
-    const { apiUrl, setLoading, navigate, showAlert, dispatch, user, setRecentChats, selectedChat ,setSelectedChat} = properties;
+    const { apiUrl, setLoading, navigate, showAlert, dispatch, user, setRecentChats, selectedChat, setSelectedChat } = properties;
     let res;
     try {
         // setLoading(true)

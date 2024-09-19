@@ -13,6 +13,7 @@ const Notifications = ({ handleNotifications }) => {
       <div className="notificationRightCorner">
         <i onClick={handleNotifications} className="fa-regular fa-2xl fa-circle-xmark"></i>
       </div>
+     
       <div className="dialogBox">
 
         {likeNotifications.map((n) => {
@@ -56,6 +57,8 @@ const Notifications = ({ handleNotifications }) => {
           )
           
         })}
+
+        {likeNotifications.length+followNotifications.length <1 && <div className="notificationMsg">No new Notifications</div>}
 
 
       </div>

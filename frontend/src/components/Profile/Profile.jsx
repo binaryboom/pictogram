@@ -32,15 +32,20 @@ const Profile = () => {
   useEffect(() => {
     ProfileFunc.getUserProfile(username, properties);
   }, [username])
-  if (loading || !profile) {
-    return (
-      <div className="loader-container">
-        <span className="loader"></span>
-      </div>
-    );
-  }
-  return (
+  // if (loading ) {
+  //   return (
+  //     <div className="loader-container">
+  //       <span className="loader"></span>
+  //     </div>
+  //   );
+  // } 
+   return (
     <div className='profilePage'>
+      {loading && (
+        <div className="loader-container">
+          <span className="loader"></span>
+        </div>
+      )}
       <div className="profileContainer">
         <div className="fixed">
           <div className="profileUserInfo">
