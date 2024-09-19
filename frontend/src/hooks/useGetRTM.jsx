@@ -17,7 +17,12 @@ const useGetRTM = ({setMessages}) => {
 
             const handleNewMessage = (newMsg) => {
                 console.log('New message received:', newMsg); // Debugging
-                setMessages((prevMessages) => [...prevMessages, newMsg]);
+                setMessages((prevMessages) => {
+                    if (!prevMessages || prevMessages.length === 0) {
+                        return [newMsg]; // Set only the new message
+                    }
+                    return [...prevMessages, newMsg];
+                });
                 
 
             };

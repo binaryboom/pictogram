@@ -39,7 +39,7 @@ const sendMsg = async (receiverId, properties) => {
                 // Update recentChats
                 setSelectedChat((prevSelectedChat) => ({
                     ...prevSelectedChat,
-                    lastSeen: userToUpdate.lastSeen,
+                    lastSeen: rc.lastSeen,
                 }));
                 setRecentChats((prev) => [selectedChat, ...prev.filter((rc) => rc._id !== selectedChat._id)]);
             }
@@ -148,6 +148,7 @@ const getAllUsers = async (properties) => {
             setAllUsers(res.allUsers)
             const userToUpdate = res.allUsers.find((rc) => rc._id === selectedChat._id);
             if (userToUpdate) {
+                console.log(userToUpdate)
                 // Create a new object to avoid directly mutating the state
                 setSelectedChat((prevSelectedChat) => ({
                     ...prevSelectedChat,

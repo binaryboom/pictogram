@@ -33,6 +33,7 @@ const getUserProfile = async (username,properties) => {
         }
         else {
             showAlert(res)
+            navigate('/')
         }
     }
 }

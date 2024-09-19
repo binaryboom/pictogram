@@ -13,7 +13,7 @@ import PostDialogFunc from '../PostDialog/PostDialogFunc.js'
 
 
 const Profile = () => {
-  
+
   const { username } = useParams()
   const [active, setActive] = useState('posts')
   const { user } = useSelector(store => store.auth)
@@ -55,7 +55,7 @@ const Profile = () => {
                   <button onClick={() => { navigate('/profile/edit') }} className='editProfileBtn'>Edit Profile</button>
                 </div>}
                 {user._id !== profile._id && (
-                  <div onClick={() => { navigate('/chats',{state:{profile}}) }} className="profileUserFollowBtn"><button className='profileMsgBtn'><span className='notForMobText'>Message&nbsp;&nbsp;</span><i class=" fa-xl fa-solid fa-message"></i></button></div>
+                  <div onClick={() => { navigate('/chats', { state: { profile } }) }} className="profileUserFollowBtn"><button className='profileMsgBtn'><span className='notForMobText'>Message&nbsp;&nbsp;</span><i class=" fa-xl fa-solid fa-message"></i></button></div>
                 )}
                 {user._id !== profile._id && (
                   <div onClick={() => { PostDialogFunc.followUnfollow(profile._id, properties) }} className="profileUserFollowBtn">
@@ -81,20 +81,33 @@ const Profile = () => {
 
         </div>
         <div className="profilePostContainer">
-          {active === 'posts' && profile.posts.map((post) => {
-            return (
-              <div key={post._id} onClick={() => { navigate(`/${post._id}`) }} className="profilePostCard">
-                <img draggable='false' src={post.image || '/person.png'} alt="post" />
-              </div>
-            )
-          })}
-          {active === 'saved' && profile.saved.map((post) => {
-            return (
-              <div key={post._id} onClick={() => { navigate(`/${post._id}`) }} className="profilePostCard">
-                <img draggable='false' src={post.image || '/person.png'} alt="post" />
-              </div>
-            )
-          })}
+          {active === 'posts' && (
+            <>
+              {profile.posts.length > 0 ? (
+                profile.posts.map((post) => (
+                  <div key={post._id} onClick={() => { navigate(`/${post._id}`) }} className="profilePostCard">
+                    <img draggable='false' src={post.image || '/person.png'} alt="post" />
+                  </div>
+                ))
+              ) : (
+                <div className="noPosts">No posts available.</div>
+              )}
+            </>
+          )}
+
+          {active === 'saved' && (
+            <>
+              {profile.saved.length > 0 ? (
+                profile.saved.map((post) => (
+                  <div key={post._id} onClick={() => { navigate(`/${post._id}`) }} className="profilePostCard">
+                    <img draggable='false' src={post.image || '/person.png'} alt="post" />
+                  </div>
+                ))
+              ) : (
+                <div className="noPosts">No saved posts available.</div>
+              )}
+            </>
+          )}
         </div>
 
       </div>
