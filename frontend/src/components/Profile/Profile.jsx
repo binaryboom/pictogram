@@ -32,20 +32,20 @@ const Profile = () => {
   useEffect(() => {
     ProfileFunc.getUserProfile(username, properties);
   }, [username])
-  // if (loading ) {
-  //   return (
-  //     <div className="loader-container">
-  //       <span className="loader"></span>
-  //     </div>
-  //   );
-  // } 
+  if (loading || !profile) {
+    return (
+      <div className="loader-container">
+        <span className="loader"></span>
+      </div>
+    );
+  } 
+  if(profile==='User does not exist !!'){
+    navigate('/')
+  }
+
    return (
     <div className='profilePage'>
-      {loading && (
-        <div className="loader-container">
-          <span className="loader"></span>
-        </div>
-      )}
+      
       <div className="profileContainer">
         <div className="fixed">
           <div className="profileUserInfo">

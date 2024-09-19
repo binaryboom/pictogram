@@ -6,8 +6,8 @@ import { setPosts } from "../../redux/postSlice";
 
 
 
-const getUserProfile = async (username,properties) => {
-    const { apiUrl, setLoading, navigate, showAlert,handleProfile,dispatch,user} = properties;
+const getUserProfile = async (username, properties) => {
+    const { apiUrl, setLoading, navigate, showAlert, handleProfile, dispatch, user } = properties;
     let res;
     try {
         setLoading(true)
@@ -29,9 +29,15 @@ const getUserProfile = async (username,properties) => {
         setLoading(false)
         if (res.success) {
             handleProfile(res.user)
-            if(res.user._id===user._id){
-                dispatch(setAuthUser({...user,bio:res.user.bio,gender:res.user.gender,profilePicture:res.user.profilePicture}))
+            if (res.user._id === user._id) {
+                dispatch(setAuthUser({ ...user, bio: res.user.bio, gender: res.user.gender, profilePicture: res.user.profilePicture }))
             }
+        }
+        else if (res.message === 'User does not exist !!') {
+            console.log('nhi mila')
+            setLoading(false)
+            showAlert(res)
+            handleProfile(res.message)
         }
         else {
             showAlert(res)
