@@ -49,6 +49,12 @@ const sendMsg = async (receiverId, properties) => {
                     ...prev.filter((rc) => rc._id !== selectedChat._id),
                 ]);
             }
+else{
+                setRecentChats((prev) => [
+                    { ...selectedChat},
+                    ...prev
+                ]);
+            }
         }
         else {
 
