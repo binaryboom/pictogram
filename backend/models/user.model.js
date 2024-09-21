@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema({
     posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
     saved: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
     isVerified:{ type: Boolean, default: false },
-    lastSeen:{type:Date}
+    lastSeen:{type:Date,default:Date.now()}
 }, { timestamps: true })
 
 const User = mongoose.model('User', userSchema);

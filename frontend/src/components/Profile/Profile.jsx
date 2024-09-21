@@ -7,6 +7,7 @@ import { useAlert } from '../../context/AlertContext.jsx'
 import { useNavigate, useParams } from 'react-router-dom'
 import ProfileFunc from './ProfileFunc.js'
 import PostDialogFunc from '../PostDialog/PostDialogFunc.js'
+import Friends from './Friends.jsx'
 
 
 
@@ -23,6 +24,21 @@ const Profile = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [profile, setProfile] = useState(null)
+  const [showFollowers,setShowFollowers] = useState(false)
+  const [showFollowing,setShowFollowing] = useState(false)
+
+  function handleFollowers() {
+    setShowFollowers(!showFollowers)
+  }
+  function handleFollowing() {
+    setShowFollowing(!showFollowing)
+  }
+  function closeDialog(){
+    setShowFollowing(false)
+    setShowFollowers(false)
+
+  }
+
   function handleProfile(profile) {
     setProfile(profile);
   }
@@ -76,8 +92,8 @@ const Profile = () => {
 
           <div className="profileOtherInfo">
             <div className="postCount">{profile.posts.length > 1 ? `${profile.posts.length} Posts` : `${profile.posts.length} Post`}</div>
-            <div className="followersCount">{profile.followers.length > 1 ? `${profile.followers.length} Followers` : `${profile.followers.length} Follower`}</div>
-            <div className="followingCount">{profile.following.length + ' Following'}</div>
+            <div onClick={handleFollowers} className="followersCount">{profile.followers.length > 1 ? `${profile.followers.length} Followers` : `${profile.followers.length} Follower`}</div>
+            <div onClick={handleFollowing} className="followingCount">{profile.following.length + ' Following'}</div>
           </div>
           <div className="profilePostOptions">
             <div onClick={() => { setActive('posts') }} className={active === 'posts' ? 'activeProfileIcon' : ''}><i className="fa-xl fa-solid fa-table-cells"></i></div>
@@ -95,7 +111,7 @@ const Profile = () => {
                   </div>
                 ))
               ) : (
-                <div className="noPosts">No posts available.</div>
+                <div className="noPosts">No post available</div>
               )}
             </>
           )}
@@ -109,12 +125,13 @@ const Profile = () => {
                   </div>
                 ))
               ) : (
-                <div className="noPosts">No saved posts available.</div>
+                <div className="noPosts">No saved post available</div>
               )}
             </>
           )}
         </div>
-
+        {showFollowers && <Friends fr={profile.followers} closeDialog={closeDialog} heading={'Followers :'} />}
+        {showFollowing && <Friends fr={profile.following} closeDialog={closeDialog} heading={'Following :'}/>}
       </div>
     </div>
   )

@@ -34,13 +34,16 @@ const sendMsg = async (req, res) => {
             ]);
         }
         const receiverSocketId = getReceiverSocketId(receiverId)
+        // const pop=await Message.findOne(newMsg)
+        // .populate({path:'senderId'})
+        // .populate({path:'receiverId'})
         // if (receiverSocketId) {
         //     io.to(receiverSocketId).emit('newMsg', newMsg)
         // }
         console.log('Emitting new message to:', receiverSocketId);
         if (receiverSocketId) {
             io.to(receiverSocketId).emit('newMsg', newMsg);
-            io.to(receiverSocketId).emit('msgNotification', newMsg._id);
+            io.to(receiverSocketId).emit('msgNotification', newMsg);
         }
         // await Promise.all([
         //     conversation.save(),newMsg.save()
@@ -75,6 +78,39 @@ const getMsg = async (req, res) => {
                 newMsg: []
             });
         }
+        return res.status(200).json({
+            success: true,
+            message: 'New messages Found!!',
+            newMsg: conversation
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            success: false,
+            message: 'Server Error !!'
+        });
+
+    }
+
+}
+const markMsgAsSeen = async (req, res) => {
+    try {
+        const senderId = req.id;
+        const receiverId = req.params.receiverId;
+        const messageId = req.params.messageId;
+        const conversation = await Conversation.findOne({
+            participaints: { $all: [senderId, receiverId] },
+            message:messageId
+        })
+            .populate('message')
+        if (!conversation) {
+            return res.status(200).json({
+                success: true,
+                message: 'Invalid Data !!',
+                newMsg: []
+            });
+        }
+        console.log(conversation)
         return res.status(200).json({
             success: true,
             message: 'New messages Found!!',
@@ -177,7 +213,8 @@ const messageController = {
     sendMsg,
     getMsg,
     getRecentChats,
-    getAllUsers
+    getAllUsers,
+    markMsgAsSeen
 }
 
 export default messageController;

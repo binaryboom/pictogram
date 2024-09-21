@@ -23,6 +23,7 @@ import ProtectedRoute from './components/MainLayout/ProtectedRoute'
 
 
 function App() {
+  
   const browserRouter = createBrowserRouter([
     {
       path: '/',
@@ -121,7 +122,7 @@ function App() {
         dispatch(setMsgNotification(notifications))
       })
       socketIo.on('followNotification', (notifications) => {
-        console.log('Follow Notifications received:', notifications);
+        // console.log('Follow Notifications received:', notifications);
         dispatch(setFollowNotification(notifications))
       })
 

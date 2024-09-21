@@ -9,5 +9,6 @@ router.route('/sendMsg/:id').post(isAuthenticated,messageController.sendMsg)
 router.route('/getAllMsg/:id').get(isAuthenticated,messageController.getMsg)
 router.route('/getRecentChats').get(isAuthenticated,messageController.getRecentChats)
 router.route('/getAllUsers').get(isAuthenticated,messageController.getAllUsers)
+router.route('/seen/:receiverId/:messageId').get(messageController.markMsgAsSeen)
 
 export default router;

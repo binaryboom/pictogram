@@ -6,6 +6,8 @@ import { useApi } from '../../context/apiContext.jsx'
 import { useAlert } from '../../context/AlertContext.jsx'
 import { useNavigate } from 'react-router-dom'
 import PostDialogFunc from '../PostDialog/PostDialogFunc.js'
+import SidebarFunc from '../Sidebar/SidebarFunc.js'
+
 
 
 const RightSidebar = () => {
@@ -41,7 +43,7 @@ const RightSidebar = () => {
           {user?.isVerified && <div className="postBlueTick"><abbr title="Founder (Pictogram)"><img src="/verified.png" alt="" /></abbr></div>}   
         </div>
         <div className="itemRight">
-          <span className='followSuggested' style={{ color: '#0095F6' }}>Switch</span>
+          <span onClick={()=>{SidebarFunc.logout(properties)}} className='followSuggested' style={{ color: '#0095F6' }}>Logout</span>
         </div>
       </div>
 

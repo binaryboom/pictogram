@@ -9,7 +9,13 @@
     display: flex;
     gap: 0.5rem;
 }
-
+.fa-circle-check{
+    margin-left: 0.2rem;
+}
+.msgCnt{
+    margin-right: 0.5rem;
+    max-width: fit-content;
+}
 /* .mainUserUsername{
     font-size: 1.5rem;
     font-family: Pacifico;
@@ -155,6 +161,7 @@
 }
 
 .chatLeftUserUsername {
+    display: flex;
     font-family: Pacifico;
 }
 
@@ -284,7 +291,13 @@
     /* border: none; */
 }
 
-
+.cardWithCount{
+    display: flex;
+    justify-content: space-between;
+}
+.chatLeftCardRight{
+    flex-grow: 1;
+}
 
 /* gpt */
 .chatRightCardUserUsername {

@@ -12,6 +12,8 @@ import { setLikeNotification } from '../../redux/rtnSlice'
 import { setFollowNotification } from '../../redux/rtnFollow'
 import { setMsgNotification } from '../../redux/rtnMsg'
 import Notifications from '../Notifications/Notifications'
+import SidebarFunc from './SidebarFunc'
+import Search from '../Search/Search'
 
 
 
@@ -32,68 +34,56 @@ const Sidebar = () => {
   const [activeIdx, setActiveIdx] = useState(0)
   const [createPost,setCreatePost] = useState(false)
   const [notification,setNotification] = useState(false)
+  const [showSearch,setShowSearch] = useState(false)
 
   function handleActive(idx) {
     setActiveIdx(idx);
   }
   function handleCreatePost(){
     setNotification(false)
+    // handleSearch(false)
+    setShowSearch(false)
     setCreatePost(!createPost);
   }
   function handleProfile(){
     setNotification(false)
+    // handleSearch(false)
+    setShowSearch(false)
     navigate(`/profile/${user.username}`)
   }
   function handleHome(){
     setNotification(false)
+    setShowSearch(false)
+    // handleSearch(false)
     navigate(`/`)
   }
   function handleChats(){
+    // handleSearch(false)
     setNotification(false)
+    setShowSearch(false)
     navigate(`/chats`)
   }
   function handleNotifications(){
+    setShowSearch(false)
     setNotification(!notification)
   }
-  const logout = async () => {
+  function handleSearch(){
     setNotification(false)
-    let res;
-    try {
-      setLoading(true)
-      let req = await fetch(`${apiUrl}/user/logout`, {
-        method: 'GET',
-        credentials: 'include'
-      });
-      res = await req.json()
-      console.log(res)
-
-    } catch (error) {
-      res = { success: false, message: 'Unable to connect with server' }
-      console.log(error)
-      showAlert(res)
-    }
-    finally {
-      if (res.success) {
-        dispatch(setMsgNotification(null));
-        dispatch(setLikeNotification(null));
-        dispatch(setFollowNotification(null));
-        dispatch(setAuthUser(null))
-        navigate('/login');
-      }
-      showAlert(res)
-      setLoading(false)
-    }
+    setShowSearch(!showSearch)
+  }
+  const properties = {
+    apiUrl, setLoading, navigate, showAlert, dispatch
   }
 
   const items = [
     { iconClass: 'fa-solid fa-house', text: 'Home', divClass: 'sidebarHome',onClick:handleHome },
-    { iconClass: 'fa-solid fa-magnifying-glass', text: 'Search', divClass: 'sidebarSearch', isMob: true },
+    { iconClass: 'fa-solid fa-magnifying-glass', text: 'Search', divClass: 'sidebarSearch', isMob: true ,onClick:handleSearch },
     { iconClass: 'fa-regular fa-compass', text: 'Explore', divClass: 'sidebarExplore' },
     { iconClass: 'fa-regular fa-message', text: 'Messages', divClass: 'sidebarMessages',onClick:handleChats },
     { iconClass: 'fa-regular fa-heart', text: `Notifications`, divClass: 'sidebarNotifications', isMob: true ,onClick:handleNotifications},
     { iconClass: 'fa-regular fa-square-plus', text: 'Create', divClass: 'sidebarCreate' ,onClick:handleCreatePost},
     { iconClass: 'profile', text: 'Profile', divClass: 'sidebarProfile' ,onClick:handleProfile},
-    { iconClass: 'fa-solid fa-right-from-bracket', text: 'Logout', divClass: 'sidebarLogout', isMob: true, onClick: logout },
+    { iconClass: 'fa-solid fa-right-from-bracket', text: 'Logout', divClass: 'sidebarLogout', isMob: true, onClick: ()=>{SidebarFunc.logout(properties) }},
   ]
 
   return (
@@ -147,6 +137,7 @@ const Sidebar = () => {
       </div>
       {createPost && <CreatePost user={user} handleCreatePost={handleCreatePost} />}
       {notification && <Notifications handleNotifications={handleNotifications} />}
+      {showSearch && <Search handleSearch={handleSearch}  />}
     </>
   )
 }

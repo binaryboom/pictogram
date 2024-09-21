@@ -5,21 +5,21 @@ import '../Signup/Signup.css'
 import Logo from '../Logo/Logo'
 import { useApi } from '../../context/apiContext'
 import { useAlert } from '../../context/AlertContext'
-import { Link,Navigate,useNavigate } from 'react-router-dom'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 const Signup = () => {
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const { showAlert } = useAlert();
   const [loading, setLoading] = useState(false);
   const apiUrl = useApi()
   console.log(apiUrl)
-  const {user}=useSelector(store=>store.auth)
-  useEffect(()=>{
-    if(user){
+  const { user } = useSelector(store => store.auth)
+  useEffect(() => {
+    if (user) {
       navigate('/')
     }
-  },[])
+  }, [])
   const {
     register,
     handleSubmit,
@@ -58,7 +58,7 @@ const Signup = () => {
       showAlert(res)
     }
     finally {
-      res.success ?( reset(),navigate('/login',{state:data.email}) ): null
+      res.success ? (reset(), navigate('/login', { state: data.email })) : null
       showAlert(res)
       setLoading(false)
     }
@@ -89,14 +89,21 @@ const Signup = () => {
                 value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
                 message: 'Invalid email address',
               },
-            })} />
+            })} 
+            onInput={(e) => e.target.value = e.target.value.toLowerCase().replace(/\s/g, '')} />
             {errors.email && <div className='error'>{errors.email.message}</div>}
           </div>
 
           <div className="formGroup">
             <label htmlFor='username'>Enter Username :</label>
-            <input id='username' placeholder="enter username" {...register("username", { required: { value: true, message: 'Required' }, minLength: { value: 5, message: 'Length should be more than 5' },
-            maxLength: { value: 12, message: 'Maximum 12 characters allowed' } })} />
+            <input id='username' placeholder="enter username" {...register("username", {
+              required: { value: true, message: 'Required' }, minLength: { value: 5, message: 'Length should be more than 5' },
+              maxLength: { value: 12, message: 'Maximum 12 characters allowed' }, pattern: {
+                value: /^[a-z0-9]+$/, // Only lowercase letters and numbers allowed
+                message: 'Username must be lowercase with no spaces and special characters',
+              },
+            })} 
+            onInput={(e) => e.target.value = e.target.value.toLowerCase().replace(/\s/g, '')}/>
             {errors.username && <div className='error'>{errors.username.message}</div>}
           </div>
 

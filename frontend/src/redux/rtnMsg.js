@@ -7,16 +7,27 @@ const rtnMsg=createSlice({
     },
     reducers:{
         setMsgNotification:(state,action)=>{
-            // state.msgNotifications=new Array(state.msgNotifications.length)
+           
             if(action.payload==null){
                 state.msgNotifications=[]
-            }
-            else{
-                state.msgNotifications.push(action.payload)
-            }
+            }else if (Array.isArray(action.payload)) {
+                // Replace msgNotifications with the filtered array (removing notifications)
+                state.msgNotifications = action.payload;
+              } else {
+                // Add a new notification
+                // state.msgNotifications.push(action.payload);
+                const exists = state.msgNotifications.some(
+                    notification => notification._id === action.payload._id // Adjust this condition based on your notification structure
+                    // notification => notification=== action.payload// Adjust this condition based on your notification structure
+                );
+                // Add a new notification only if it doesn't already exist
+                if (!exists) {
+                    state.msgNotifications.push(action.payload);
+                }
+              }
         }
     }
-    // state.likeNotifications=state.likeNotifications.filter((item)=>item.postId!==action.payload.postId && item.user._id !== action.payload.user._id)
+   
 })
 
 export const {setMsgNotification}=rtnMsg.actions;

@@ -1,25 +1,30 @@
 import React from 'react'
 import './Notifications.css'
 import '../Post/Post.css'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { setLikeNotification } from '../../redux/rtnSlice'
+import { setFollowNotification } from '../../redux/rtnFollow'
+
+
 const Notifications = ({ handleNotifications }) => {
   const { likeNotifications } = useSelector(store => store.rtn)
   const { followNotifications } = useSelector(store => store.rtnFollow)
-  const navigate=useNavigate()
+  const navigate = useNavigate()
+  const dispatch = useDispatch();
   return (
     <div className="dialog notifications">
-      {console.log(likeNotifications, followNotifications)}
+      {/* {console.log(likeNotifications, followNotifications)} */}
       <div className="notificationRightCorner">
         <i onClick={handleNotifications} className="fa-regular fa-2xl fa-circle-xmark"></i>
       </div>
-     
+
       <div className="dialogBox">
 
         {likeNotifications.map((n) => {
           return (
-            
-            <div className="notificationCard" onClick={handleNotifications}>
+
+            <div className="notificationCard" onClick={() => { handleNotifications(); dispatch(setLikeNotification({ ...n, type: 'unlike' })) }}>
               <div onClick={() => { navigate(`/profile/${n?.user.username}`) }} className="itemLeft">
                 <div className="suggestedUserPhoto">
                   <img draggable='false' src={n?.user.profilePicture || '/person.png'} alt="photo" />
@@ -30,7 +35,7 @@ const Notifications = ({ handleNotifications }) => {
               </div>
 
               <div className="itemRight">
-                <span onClick={() => { navigate(`/${n?.postId}`)}} className='notificationMsg'>{n.message}</span>
+                <span onClick={() => { navigate(`/${n?.postId}`) }} className='notificationMsg'>{n.message}</span>
               </div>
 
             </div>
@@ -39,7 +44,7 @@ const Notifications = ({ handleNotifications }) => {
         })}
         {followNotifications.map((n) => {
           return (
-            <div className="notificationCard" onClick={handleNotifications}>
+            <div className="notificationCard" onClick={() => { handleNotifications(); dispatch(setFollowNotification({ ...n, type: 'unfollow' })) }}>
               <div onClick={() => { navigate(`/profile/${n?.user.username}`) }} className="itemLeft">
                 <div className="suggestedUserPhoto">
                   <img draggable='false' src={n?.user.profilePicture || '/person.png'} alt="photo" />
@@ -50,15 +55,15 @@ const Notifications = ({ handleNotifications }) => {
               </div>
 
               <div className="itemRight">
-                <span onClick={() => { navigate(`/profile/${n?.otherUser}`)}} className='notificationMsg'>{n.message}</span>
+                <span onClick={() => { navigate(`/profile/${n?.otherUser}`) }} className='notificationMsg'>{n.message}</span>
               </div>
 
             </div>
           )
-          
+
         })}
 
-        {likeNotifications.length+followNotifications.length <1 && <div className="notificationMsg">No new Notifications</div>}
+        {likeNotifications.length + followNotifications.length < 1 && <div className="notificationMsg">No new Notifications</div>}
 
 
       </div>

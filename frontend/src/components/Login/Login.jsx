@@ -95,7 +95,8 @@ const Login = () => {
 
           <div className="formGroup">
             <label htmlFor='usernameEmail'>Enter Username / Email :</label>
-            <input id='usernameEmail' placeholder="enter username / email" {...register("usernameEmail", { required: { value: true, message: 'Required' }, minLength: { value: 5, message: 'Length should be more than 5' } })} />
+            <input id='usernameEmail' placeholder="enter username / email" {...register("usernameEmail", { required: { value: true, message: 'Required' }, minLength: { value: 5, message: 'Length should be more than 5' } })}
+            onInput={(e) => e.target.value = e.target.value.toLowerCase().replace(/\s/g, '')} />
             {errors.usernameEmail && <div className='error'>{errors.usernameEmail.message}</div>}
           </div>
 
