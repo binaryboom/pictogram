@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setMsgNotification } from '../redux/rtnMsg';
 
 const useGetRTM = ({ setMessages, selectedChat }) => {
-    const msgNotifications = useSelector(store => store.rtnMsg.msgNotifications);
+    // const msgNotifications = useSelector(store => store.rtnMsg.msgNotifications);
     const { socket } = useSelector(store => store.socketio)
-    const dispatch = useDispatch()
+    // const dispatch = useDispatch()
     // const {msgNotifications}=useSelector(store=>store.rtn)
 
     useEffect(() => {
@@ -21,31 +21,78 @@ const useGetRTM = ({ setMessages, selectedChat }) => {
                     if (!prevMessages || prevMessages.length === 0) {
                         return [newMsg]; // Set only the new message
                     }
-                    // return [...prevMessages, newMsg];
+                    return [...prevMessages, newMsg];
                 });
-                console.log('before', msgNotifications)
-                dispatch(setMsgNotification(
-                    msgNotifications.filter((m) => (m.senderId !== selectedChat._id))
-                ))
-                console.log('after', msgNotifications)
+                // console.log('before', msgNotifications)
+                // dispatch(setMsgNotification(
+                //     msgNotifications.filter((m) => (m.senderId !== selectedChat._id))
+                // ))
+                // console.log('after', msgNotifications)
             }
 
 
         };
+        const handleSeen2 = () => {
+
+            setMessages((prevMessages) => {
+                if (prevMessages) {
+                    return prevMessages.map((m) => (
+                        m._id === messageId ? m.seen = true : ''
+                    ));
+                }
+            });
+
+        };
+        const handleSeen = ({ messageId }) => {
+            console.log('handle seen')
+            setMessages((prevMessages) => {
+                if (prevMessages) {
+                    return prevMessages.map((m) => {
+                        // Return a new object for the message with the updated 'seen' property
+                        if (m._id === messageId) {
+                            return { ...m, seen: true, seenBy: Array.from(new Set([...m.seenBy, m.senderId, m.receiverId])) }; // Create a new object with 'seen' set to true
+                        }
+                        return m; // Return the message unchanged if it doesn't match
+                    });
+                }
+                return prevMessages;
+            });
+        };
+        function handleMultipleSeen({ updatedMessages }) {
+            console.log('multi', updatedMessages)
+            setMessages((prevMessages) => {
+                if (prevMessages) {
+                    return prevMessages.map((m) => {
+                        const updatedMessage = updatedMessages.find((u) => u._id === m._id);
+                        // Return a new object for each message with 'seen' set to true and updated 'seenBy' if found
+                        return { 
+                            ...m,
+                            seen: true, 
+                            seenBy: updatedMessage ? updatedMessage.seenBy : m.seenBy 
+                        };
+                    });
+                }
+                return prevMessages;
+            });
+        }
 
         if (socket) {
             console.log('Socket is available. Setting up listener.'); // Debugging
             socket.on('newMsg', handleNewMessage);
+            socket.on('singleMsgSeen', handleSeen);
+            socket.on('multipleMsgSeen', handleMultipleSeen);
+
         }
 
         return () => {
             if (socket) {
                 console.log('Removing socket listener.'); // Debugging
                 socket.off('newMsg', handleNewMessage);
+                socket.off('singleMsgSeen', handleSeen);
             }
         };
 
-    }, [socket, setMessages, selectedChat, msgNotifications, dispatch])
+    }, [socket, setMessages, selectedChat])
 }
 
 export default useGetRTM

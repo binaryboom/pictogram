@@ -9,14 +9,14 @@ import { format, formatDistance, formatDistanceToNow, isToday, isYesterday } fro
 import useGetRTM from '../../hooks/useGetRTM'
 import { setMsgNotification } from '../../redux/rtnMsg'
 
-const Chat = () => {
+const Chat = ({selectedChat,setSelectedChat}) => {
+  const { socket } = useSelector((store) => store.socketio);
   const location = useLocation();
   const profile = location.state?.profile;
-  // console.log(profile)
   const [prevDate, setPrevDate] = useState('');
   const formatDate = (date) => format(new Date(date), 'MMM d, yyyy');
   const { user } = useSelector(store => store.auth)
-  const [selectedChat, setSelectedChat] = useState(null);
+  // const [selectedChat, setSelectedChat] = useState(null);
   const { onlineUsers } = useSelector(store => store.chat)
   const { offlineUsers } = useSelector(store => store.offlineSlice)
   // console.log(offlineUsers)
@@ -73,12 +73,14 @@ const Chat = () => {
     }
   };
   function handleChatClick(chat) {
-    console.log(`chat`,chat)
-    console.log(`msgNots`,msgNotifications)
+    // console.log(`chat`,chat)
+    // console.log(`msgNots`,msgNotifications)
+    // socket.on('singleMessageSeen',)
     dispatch(setMsgNotification(
       msgNotifications.filter((m) => (m.senderId !== chat._id))
     ))
     setMessages([])
+    ChatFunc.seenAllMsg(chat._id,properties)
     ChatFunc.getAllMsg(chat._id, properties)
     setSelectedChat(chat);
   }
@@ -110,40 +112,42 @@ const Chat = () => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages])
 
-  const { socket } = useSelector((store) => store.socketio);
 
-  useEffect(() => {
-    if (!socket) return;
+
+  
+
+  // useEffect(() => {
+  //   if (!socket) return;
 
     
-    const handleMsgNotification = (notifications) => {
-      // console.log('chat handle socket')
-      // console.log(selectedChat)
-      // console.log(notifications)
-      if (selectedChat && notifications.senderId === selectedChat._id) {
+  //   const handleMsgNotification = (notifications) => {
+  //     // console.log('chat handle socket')
+  //     // console.log(selectedChat)
+  //     // console.log(notifications)
+  //     if (selectedChat && notifications.senderId === selectedChat._id) {
         
-        socket.emit('markMessagesAsSeen', { otherUserId: selectedChat._id, mainUserId: user._id ,message:notifications});
+  //       socket.emit('markMessagesAsSeen', { otherUserId: selectedChat._id, mainUserId: user._id ,message:notifications});
         
         
-        useEffect(() => {
-          markMessagesAsSeen();
-        }, [selectedChat]);
+  //       useEffect(() => {
+  //         markMessagesAsSeen();
+  //       }, [selectedChat]);
 
-        // dispatch(setMsgNotification(
-        //   msgNotifications.filter((m) => (m.senderId !== selectedChat._id))
-        // ))
-        return; // Do not add notification for the selected chat
-      }
-      // else{
-      //   dispatch(setMsgNotification(notifications));
-      // }
-    };
-    socket.on('msgNotification', handleMsgNotification);
+  //       // dispatch(setMsgNotification(
+  //       //   msgNotifications.filter((m) => (m.senderId !== selectedChat._id))
+  //       // ))
+  //       return; // Do not add notification for the selected chat
+  //     }
+  //     // else{
+  //     //   dispatch(setMsgNotification(notifications));
+  //     // }
+  //   };
+  //   socket.on('msgNotification', handleMsgNotification);
 
-    return () => {
-      socket.off('msgNotification', handleMsgNotification);
-    };
-  }, [socket,selectedChat, dispatch]);
+  //   return () => {
+  //     socket.off('msgNotification', handleMsgNotification);
+  //   };
+  // }, [socket,selectedChat, dispatch]);
 
   function getMsgCount(senderId) {
     let cnt = 0
@@ -297,7 +301,7 @@ const Chat = () => {
                       )}
                       <div className={`messageWrapper ${m.senderId === user._id ? 'mainUserMsg' : 'otherUserMsg'}`}>
                         <span>{m.message}</span>
-                        <sub className="messageTime">{format(new Date(m.createdAt), 'hh:mm a')}{m.senderId === user._id && <i style={{ fontWeight: `${selectedChat._id === m.senderId ? '900' : '500'}` }} class="fa-solid fa-lg fa-circle-check"></i>}</sub>
+                        <sub className="messageTime">{format(new Date(m.createdAt), 'hh:mm a')}{m.senderId === user._id && <i style={{ fontWeight: `${m.seenBy.includes(selectedChat._id) ? '900' : '500'}` }} class="fa-solid fa-lg fa-circle-check"></i>}</sub>
                       </div>
                     </React.Fragment>
                   );

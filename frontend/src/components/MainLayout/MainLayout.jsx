@@ -9,7 +9,7 @@ import EditProfile from '../EditProfile/EditProfile'
 import Chat from '../Chat/Chat'
 
 
-const MainLayout = () => {
+const MainLayout = ({selectedChat,setSelectedChat}) => {
   const location = useLocation();
   const isEditProfile=location.pathname === '/profile/edit' 
   const isChat=location.pathname === '/chats' 
@@ -35,7 +35,7 @@ const MainLayout = () => {
 
     {isEditProfile && ( <div className='mainRight'><EditProfile /></div>)}
     {isProfilePage && ( <div className='mainRight'><Profile /></div>)}
-    {isChat && ( <div  className='chatMainRight'><Chat /></div>)}
+    {isChat && ( <div  className='chatMainRight'><Chat selectedChat={selectedChat} setSelectedChat={setSelectedChat} /></div>)}
 
 
 

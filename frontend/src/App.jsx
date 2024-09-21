@@ -23,11 +23,12 @@ import ProtectedRoute from './components/MainLayout/ProtectedRoute'
 
 
 function App() {
-  
+  const msgNotifications = useSelector(state => state.rtnMsg.msgNotifications);
+  const [selectedChat, setSelectedChat] = useState(null);
   const browserRouter = createBrowserRouter([
     {
       path: '/',
-      element: <ProtectedRoute> <MainLayout /> </ProtectedRoute>,
+      element: <ProtectedRoute> <MainLayout selectedChat={selectedChat} setSelectedChat={setSelectedChat} /> </ProtectedRoute>,
       children: [
         {
           path: '/',
@@ -35,7 +36,7 @@ function App() {
         },
         {
           path: '/profile/:username',
-          element:<ProtectedRoute> <Profile /></ProtectedRoute>
+          element: <ProtectedRoute> <Profile /></ProtectedRoute>
         },
         {
           path: '/profile/edit',
@@ -64,7 +65,7 @@ function App() {
   const dispatch = useDispatch()
   const { user } = useSelector(store => store.auth)
   const { socket } = useSelector(store => store.socketio)
-  const apiUrl=useApi()
+  const apiUrl = useApi()
   useEffect(() => {
     if (user) {
       console.log(user.isVerified)
@@ -83,10 +84,11 @@ function App() {
         console.log('Online users received:', onlineUsers);
         dispatch(setOnlineUsers(onlineUsers))
       })
+
       // socketIo.on('userLastSeen', ({ userId, lastSeen }) => {
       //   console.log('offline users received:', userId,lastSeen);
       //   // dispatch(setOfflineUsers(offlineUsers))
-       
+
       //   const setLastSeen = async () => {
       //     const apiUrl= `http://192.168.1.46:3000/api/v1`;
       //     let res;
@@ -108,7 +110,7 @@ function App() {
       //       console.log(error)
       //     //   showAlert(res)
       //     }
-          
+
       //   }
 
       //   setLastSeen()
@@ -117,10 +119,18 @@ function App() {
         // console.log('Notifications received:', notifications);
         dispatch(setLikeNotification(notifications))
       })
-      socketIo.on('msgNotification', (notifications) => {
-        // console.log('Notifications received:', notifications);
-        dispatch(setMsgNotification(notifications))
-      })
+      // socketIo.on('msgNotification', (notifications) => {
+      //   // console.log('Notifications received:', notifications);
+      //   if (selectedChat && notifications.senderId === selectedChat._id) {
+      //     dispatch(setMsgNotification(
+      //       msgNotifications.filter((m) => (m.senderId !== selectedChat._id))
+      //     ))
+
+      //   } else {
+      //     dispatch(setMsgNotification(notifications))
+      //   }
+      // })
+
       socketIo.on('followNotification', (notifications) => {
         // console.log('Follow Notifications received:', notifications);
         dispatch(setFollowNotification(notifications))
@@ -140,6 +150,27 @@ function App() {
     //   dispatch(setSocket(null))
     // }
   }, [user, dispatch])
+
+  useEffect(() => {
+    if (socket) {
+      socket.on('msgNotification', (notifications) => {
+        // console.log('Notifications received:', notifications);
+        if (selectedChat && notifications.senderId === selectedChat._id) {
+          socket.emit('markMessagesAsSeen', { otherUserId: selectedChat._id, mainUserId: user._id ,message:notifications});
+          dispatch(setMsgNotification(
+            msgNotifications.filter((m) => (m.senderId !== selectedChat._id))
+          ))
+
+        } else {
+          dispatch(setMsgNotification(notifications))
+        }
+      })
+
+      return () => {
+        socket.off('msgNotification');
+      };
+    }
+  }, [user, socket, dispatch,msgNotifications]);
   return (
     <>
 

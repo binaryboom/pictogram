@@ -168,12 +168,69 @@ const getAllUsers = async (properties) => {
         }
     }
 }
+const seenAllMsg = async (receiverId,properties) => {
+    const { apiUrl,showAlert, dispatch, user, setAllUsers, selectedChat, allUsers,setMessages, setSelectedChat } = properties;
+    let res;
+    try {
+        // setLoading(true)
+        let req = await fetch(`${apiUrl}/message/seen/all/${receiverId}`, {
+            method: 'GET',
+            credentials: 'include',
+        });
+        res = await req.json()
+        console.log(res)
+
+    } catch (error) {
+        res = { success: false, message: 'Unable to connect with server' }
+        console.log(error)
+        showAlert(res)
+    }
+    finally {
+        // setLoading(false)
+        // if (res.success) {
+        //     const updatedMessages=res.updatedMessages
+        //     setMessages((prevMessages) => {
+
+        //         if (prevMessages) {
+        //             return prevMessages.map((m) => {
+        //                 // Return a new object for each message with 'seen' set to true
+        //                 return { ...m, seen: true,seenBy:updatedMessages.find((u)=>{u._id===m._id?u.seenBy:m.seenBy}) };
+        //             });
+        //         }
+        //         return prevMessages;
+        //     });
+        
+            
+        // }
+        if (res.success) {
+            const updatedMessages = res.updatedMessages;
+            setMessages((prevMessages) => {
+                if (prevMessages) {
+                    return prevMessages.map((m) => {
+                        const updatedMessage = updatedMessages.find((u) => u._id === m._id);
+                        // Return a new object for each message with 'seen' set to true and updated 'seenBy' if found
+                        return { 
+                            ...m, 
+                            seen: true, 
+                            seenBy: updatedMessage ? updatedMessage.seenBy : m.seenBy 
+                        };
+                    });
+                }
+                return prevMessages;
+            });
+        }
+        else {
+            showAlert(res)
+        }
+    }
+}
 
 const ChatFunc = {
     sendMsg,
     getRecentChats,
     getAllUsers,
-    getAllMsg
+    getAllMsg,
+    seenAllMsg
 };
 
 export default ChatFunc;

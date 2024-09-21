@@ -78,7 +78,7 @@ const Sidebar = () => {
   const items = [
     { iconClass: 'fa-solid fa-house', text: 'Home', divClass: 'sidebarHome',onClick:handleHome },
     { iconClass: 'fa-solid fa-magnifying-glass', text: 'Search', divClass: 'sidebarSearch', isMob: true ,onClick:handleSearch },
-    { iconClass: 'fa-regular fa-compass', text: 'Explore', divClass: 'sidebarExplore' },
+    // { iconClass: 'fa-regular fa-compass', text: 'Explore', divClass: 'sidebarExplore' },
     { iconClass: 'fa-regular fa-message', text: 'Messages', divClass: 'sidebarMessages',onClick:handleChats },
     { iconClass: 'fa-regular fa-heart', text: `Notifications`, divClass: 'sidebarNotifications', isMob: true ,onClick:handleNotifications},
     { iconClass: 'fa-regular fa-square-plus', text: 'Create', divClass: 'sidebarCreate' ,onClick:handleCreatePost},

@@ -40,7 +40,7 @@ io.on('connection', (socket) => {
   io.emit('getOnlineUsers', Object.values(userSocketMap))
 
   socket.on('markMessagesAsSeen', async ({ otherUserId, mainUserId, message }) => {
-    console.log('mm',otherUserId, mainUserId, message,'mm')
+    // console.log('mm', otherUserId, mainUserId, message, 'mm')
     // await updateMessagesAsSeen(chatId, userId);
     const markMsgAsSeen = async () => {
       // const apiUrl= process.env.URL;
@@ -48,8 +48,12 @@ io.on('connection', (socket) => {
       let res;
       try {
 
-        let req = await fetch(`${apiUrl}/api/v1/message/seen/${otherUserId}/${message._id}`, {
-          method: 'GET',
+        let req = await fetch(`${apiUrl}/api/v1/message/seen/${message._id}`, {
+          method: 'POST',
+          body: JSON.stringify({ mainUserId, otherUserId }),
+          headers: {
+            'Content-Type': 'application/json'
+          },
           credentials: 'include',
         });
         res = await req.json()
@@ -58,14 +62,13 @@ io.on('connection', (socket) => {
       } catch (error) {
         res = { success: false, message: 'Unable to connect with server' }
         console.log(error)
-        //   showAlert(res)
       }
 
     }
     markMsgAsSeen()
-
+    const messageId = message._id
     // Emit to all users in the chat about the seen status
-    socket.to(getReceiverSocketId(otherUserId)).emit('messagesSeen', { mainUserId, message });
+    socket.to(getReceiverSocketId(otherUserId)).emit('singleMsgSeen', { otherUserId, mainUserId, messageId });
   });
 
   socket.on('disconnect', () => {
