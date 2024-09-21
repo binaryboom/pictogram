@@ -21,7 +21,7 @@ const useGetRTM = ({ setMessages, selectedChat }) => {
                     if (!prevMessages || prevMessages.length === 0) {
                         return [newMsg]; // Set only the new message
                     }
-                    return [...prevMessages, newMsg];
+                    // return [...prevMessages, newMsg];
                 });
                 console.log('before', msgNotifications)
                 dispatch(setMsgNotification(
