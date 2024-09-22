@@ -88,7 +88,7 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     if (userId) {
-      userSocketMap[userId].lastSeen = new Date()
+      // userSocketMap[userId].lastSeen = new Date()
       console.log(`Disconnected \n UserId=${userId} \n SocketId=${socket.id}`);
 
       const setLastSeen = async () => {

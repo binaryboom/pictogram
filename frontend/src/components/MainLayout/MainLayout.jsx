@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import Sidebar from '../Sidebar/Sidebar'
 import Home from '../Home/Home'
@@ -16,6 +16,11 @@ const MainLayout = ({selectedChat,setSelectedChat,recentChats,setRecentChats}) =
   const isProfilePage = location.pathname.startsWith('/profile') && !isEditProfile;
   const notHome=!isEditProfile && !isProfilePage && !isChat
   const isHome= location.pathname.startsWith('/') && notHome
+  useEffect(() => {
+    if (!isChat) {
+      setSelectedChat(null);
+    }
+  }, [isChat, setSelectedChat]);
   return (
     <div className='mainLayout'>
     <Sidebar/>
