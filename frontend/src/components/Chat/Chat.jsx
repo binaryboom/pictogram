@@ -31,7 +31,7 @@ const Chat = ({selectedChat,setSelectedChat,recentChats, setRecentChats}) => {
   const [messages, setMessages] = useState([])
   const [showAllUsers, setShowAllUsers] = useState(false)
   const msgNotifications = useSelector(state => state.rtnMsg.msgNotifications);
-
+  const inputRef = useRef(null);
   const isUserOnline = (userId) => onlineUsers?.some((user) => user._id === userId);
   const getUserLastSeen = (date) => {
     const lastSeenDate = new Date(date);
@@ -72,6 +72,7 @@ const Chat = ({selectedChat,setSelectedChat,recentChats, setRecentChats}) => {
       if (text.trim()) {
         ChatFunc.sendMsg(selectedChat._id, properties);
         setText(''); 
+        inputRef.current.focus(); 
       }
     }
   };
@@ -89,10 +90,9 @@ const Chat = ({selectedChat,setSelectedChat,recentChats, setRecentChats}) => {
   }
   const handleBackButtonClick = () => {
     setSelectedChat(null);
-    // setTimeout(()=>{
-    //   setSelectedChat(null);
-    // },1000)
   };
+
+ 
 
   useEffect(() => {
     if (profile) {
@@ -273,7 +273,7 @@ const Chat = ({selectedChat,setSelectedChat,recentChats, setRecentChats}) => {
 
               <div className="chatRightCard1">
                 <div className="chatRightCardLeft" >
-                  <div onClick={() => { handleBackButtonClick() }} className="mobBackBtn"><i className="fa-xl fa-solid fa-circle-left"></i></div>
+                  <div onClick={() => { setSelectedChat(null); }} className="mobBackBtn"><i className="fa-xl fa-solid fa-circle-left"></i></div>
                   <div onClick={() => { navigate(`/profile/${selectedChat.username}`) }} className="chatRightUserPhoto"><img draggable='false' src={selectedChat.profilePicture || '/person.png'} alt="photo" /></div>
                 </div>
                 <div className="chatRightCardRight">
@@ -326,7 +326,7 @@ const Chat = ({selectedChat,setSelectedChat,recentChats, setRecentChats}) => {
               <textarea onKeyDown={handleKeyDown} value={text} onChange={handleInput} type='text' placeholder='Message......' />
               {/* </div> */}
               {/* <div className="chatRightCardRight"> */}
-              {text && <button onClick={() => { ChatFunc.sendMsg(selectedChat._id, properties) }} className='sendMsgBtn'>Send</button>}
+              {text && <button onClick={() => { ChatFunc.sendMsg(selectedChat._id, properties);inputRef.current.focus();  }} className='sendMsgBtn'>Send</button>}
               {/* </div> */}
             </div>
           </>

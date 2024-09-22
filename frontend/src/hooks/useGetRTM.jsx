@@ -40,18 +40,21 @@ const useGetRTM = ({ setMessages, selectedChat ,setRecentChats}) => {
         };
         const handleSeen = ({ otherUserId, mainUserId,message }) => {
             console.log('handle seen' ,otherUserId,mainUserId,message)
-            setMessages((prevMessages) => {
-                if (prevMessages) {
-                    return prevMessages.map((m) => {
-                        // Return a new object for the message with the updated 'seen' property
-                        if (m._id === message) {
-                            return { ...m, seen: true, seenBy: Array.from(new Set([...m.seenBy, m.senderId._id, m.receiverId])) }; // Create a new object with 'seen' set to true
-                        }
-                        return m; // Return the message unchanged if it doesn't match
-                    });
-                }
-                return prevMessages;
-            });
+            // if(selectedChat._id===mainUserId){
+
+                setMessages((prevMessages) => {
+                    if (prevMessages) {
+                        return prevMessages.map((m) => {
+                            // Return a new object for the message with the updated 'seen' property
+                            if (m._id === message) {
+                                return { ...m, seen: true, seenBy: Array.from(new Set([...m.seenBy, m.senderId._id, m.receiverId])) }; // Create a new object with 'seen' set to true
+                            }
+                            return m; // Return the message unchanged if it doesn't match
+                        });
+                    }
+                    return prevMessages;
+                });
+            // }
         };
         function handleMultipleSeen({ updatedMessages }) {
             // console.log('multi', updatedMessages)
