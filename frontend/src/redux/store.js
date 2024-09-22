@@ -18,6 +18,7 @@ import rtnSlice from './rtnSlice.js'
 import rtnMsg from './rtnMsg.js'
 import rtnFollow from './rtnFollow.js'
 import offlineSlice from './offlineSlice.js'
+import rtnComment from './rtnComment.js'
 
 
 const persistConfig = {
@@ -34,6 +35,7 @@ const rootReducer = combineReducers({
   rtn:rtnSlice,
   rtnMsg,
   rtnFollow,
+  rtnComment,
   offlineSlice
 })
 const persistedReducer = persistReducer(persistConfig, rootReducer)

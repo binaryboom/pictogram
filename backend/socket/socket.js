@@ -40,14 +40,13 @@ io.on('connection', (socket) => {
   io.emit('getOnlineUsers', Object.values(userSocketMap))
 
   socket.on('markMessagesAsSeen', async ({ otherUserId, mainUserId, message }) => {
-    // console.log('mm', otherUserId, mainUserId, message, 'mm')
+    console.log('mm', otherUserId, mainUserId, message,message._id, 'mm')
     // await updateMessagesAsSeen(chatId, userId);
     const markMsgAsSeen = async () => {
       // const apiUrl= process.env.URL;
       const apiUrl = 'http://localhost:3000';
       let res;
       try {
-
         let req = await fetch(`${apiUrl}/api/v1/message/seen/${message._id}`, {
           method: 'POST',
           body: JSON.stringify({ mainUserId, otherUserId }),
@@ -63,17 +62,19 @@ io.on('connection', (socket) => {
         res = { success: false, message: 'Unable to connect with server' }
         console.log(error)
       }
+      const receiverSocketId = getReceiverSocketId(otherUserId);
       if (receiverSocketId) {
-        io.to(receiverSocketId).emit('singleMsgSeen', { otherUserId, mainUserId, messageId });
+        // const messageId = message._id
+        socket.to(receiverSocketId).emit('singleMsgSeen', { otherUserId, mainUserId,message: message._id });
+        console.log('emitted sms to',otherUserId,mainUserId,message._id)
       } else {
         console.log('Receiver socket not found');
       }
     }
     markMsgAsSeen()
-    const messageId = message._id
-    console.log('single msg seen o',otherUserId)
-    console.log('single msg seen m',mainUserId)
-    console.log('single msg seen msg',messageId)
+    // console.log('single msg seen o',otherUserId)
+    // console.log('single msg seen m',mainUserId)
+    // console.log('single msg seen msg',messageId)
     // Emit to all users in the chat about the seen status
     // const receiverSocketId = getReceiverSocketId(otherUserId);
     // if (receiverSocketId) {

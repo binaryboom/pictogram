@@ -97,7 +97,7 @@ const getAllPosts = async (req, res) => {
         const allPosts = await Post.find().sort({ createdAt: -1 })
             .populate({ path: 'author', select: 'username profilePicture isVerified' })
             .populate({ path: 'comments', select: 'username profilePicture isVerified' })
-            .populate({ path: 'likes', select: 'username profilePicture isVerified',options: { sort: { createdAt: -1 } } })
+            .populate({ path: 'likes', select: 'username profilePicture isVerified', options: { sort: { createdAt: -1 } } })
         return res.status(200).json({
             success: true,
             allPosts
@@ -116,7 +116,7 @@ const getPostByUser = async (req, res) => {
         const authorId = req.id;
         const allPosts = await Post.find({ author: authorId }).sort({ createdAt: -1 })
             .populate({ path: 'author', select: 'username profilePicture' })
-            .populate({ path: 'comments', select: 'username profilePicture',options: { sort: { createdAt: -1 } } })
+            .populate({ path: 'comments', select: 'username profilePicture', options: { sort: { createdAt: -1 } } })
         return res.status(200).json({
             success: true,
             allPosts
@@ -148,7 +148,7 @@ const getPostById = async (req, res) => {
                 },
                 options: { sort: { createdAt: -1 } }
             })
-            .populate({ path: 'likes', select: 'username profilePicture isVerified',options: { sort: { createdAt: -1 } } })
+            .populate({ path: 'likes', select: 'username profilePicture isVerified', options: { sort: { createdAt: -1 } } })
         // .populate({ path: 'comments', select: 'username profilePicture' })
 
         if (!post) {
@@ -197,16 +197,16 @@ const likeUnlike = async (req, res) => {
             // doUnlike
             await post.updateOne({ $pull: { likes: mainUserId } })
             const postLikes = await Post.findById(postId).select('likes')
-            .populate({ path: 'likes', select: 'username profilePicture isVerified',options: { sort: { createdAt: -1 } } })
-            if(post.author.toString()!==mainUserId){
-                const notification={
-                    type:'unlike',
-                    user:mainUser,
+                .populate({ path: 'likes', select: 'username profilePicture isVerified', options: { sort: { createdAt: -1 } } })
+            if (post.author.toString() !== mainUserId) {
+                const notification = {
+                    type: 'unlike',
+                    user: mainUser,
                     postId,
                     message: ``
                 }
-                const postAuthorSocketId=getReceiverSocketId(post.author.toString())
-                io.to(postAuthorSocketId).emit('notifications',notification)
+                const postAuthorSocketId = getReceiverSocketId(post.author.toString())
+                io.to(postAuthorSocketId).emit('notifications', notification)
             }
             return res.status(200).json({
                 success: true,
@@ -218,18 +218,18 @@ const likeUnlike = async (req, res) => {
             // do Like
             await post.updateOne({ $addToSet: { likes: mainUserId } })
             const postLikes = await Post.findById(postId).select('likes')
-            .populate({ path: 'likes', select: 'username profilePicture isVerified',options: { sort: { createdAt: -1 } } })
-            const mainUser=await User.findById(mainUserId).select('username profilePicture')
+                .populate({ path: 'likes', select: 'username profilePicture isVerified', options: { sort: { createdAt: -1 } } })
+            const mainUser = await User.findById(mainUserId).select('username profilePicture')
             // if(post.author._id)
-            if(post.author.toString()!==mainUserId){
-                const notification={
-                    type:'like',
-                    user:mainUser,
+            if (post.author.toString() !== mainUserId) {
+                const notification = {
+                    type: 'like',
+                    user: mainUser,
                     postId,
                     message: ` liked your post`
                 }
-                const postAuthorSocketId=getReceiverSocketId(post.author.toString())
-                io.to(postAuthorSocketId).emit('notifications',notification)
+                const postAuthorSocketId = getReceiverSocketId(post.author.toString())
+                io.to(postAuthorSocketId).emit('notifications', notification)
             }
             return res.status(200).json({
                 success: true,
@@ -307,13 +307,14 @@ const addComment = async (req, res) => {
         const postId = req.params.id;
         const mainUser = req.id;
         const text = req.body.text;
-        // console.log(req.body)
+        console.log(mainUser)
         if (!text) {
             return res.status(400).json({
                 success: false,
                 message: 'Text is required !!'
             });
         }
+        const user=await User.findById(mainUser).select('_id username profilePicture isVerified')
         const post = await Post.findById(postId);
         const comment = await Comment.create({
             text,
@@ -334,7 +335,17 @@ const addComment = async (req, res) => {
                 },
                 options: { sort: { createdAt: -1 } } // Use the 'options' field to specify sorting
             })
-            
+        if (post.author.toString() !== mainUser._id) {
+            const notification = {
+                type: 'comment',
+                user,
+                postId,
+                commentId:comment._id,
+                message: ` commented on your post`
+            }
+            const postAuthorSocketId = getReceiverSocketId(post.author.toString())
+            io.to(postAuthorSocketId).emit('commentNotification', notification)
+        }
         return res.status(201).json({
             success: true,
             postComments,

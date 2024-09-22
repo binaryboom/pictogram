@@ -111,7 +111,7 @@ const markMsgAsSeen = async (req, res) => {
         const senderId = req.body.mainUserId;
         const receiverId = req.body.otherUserId;
         const messageId = req.params.messageId;
-        // console.log(senderId,receiverId)
+        console.log('mmas',senderId,receiverId)
         const conversation = await Conversation.findOne({
             participaints: { $all: [receiverId, senderId] },
             message: { $in: [messageId] }
@@ -151,31 +151,6 @@ const markAllMsgAsSeen = async (req, res) => {
         const senderId = req.id;
         const receiverId = req.params.receiverId;
         console.log(senderId, receiverId)
-        // const conversation = await Conversation.findOne({
-        //     participaints:{$all: [receiverId, senderId] },
-        // })
-        // if (!conversation) {
-        //     return res.status(401).json({
-        //         success: false,
-        //         message: 'Invalid Data !!',
-        //     });
-        // }
-
-        //    const msg=await Message.find({senderId,receiverId}).sort({ createdAt: -1 }).limit(50)
-        //    .select('_id receiverId')
-        //    const recIds= msg.map(message => message.receiverId);
-        //    for(let r of recIds){
-        //     if(senderId===r){
-        //         // set seen to true
-        //     }
-        //    }
-
-        //    if(senderId===recId){
-        //        const seen= await Message.updateMany(
-        //            { _id: { $in: msg } },
-        //            { $set: { seen: true } }
-        //         );
-        //     }
 
         const messages = await Message.find({ receiverId: senderId, senderId: receiverId })
             .sort({ createdAt: -1 })
@@ -194,7 +169,7 @@ const markAllMsgAsSeen = async (req, res) => {
                 message.seenBy.push(senderId); // Add senderId to seenBy if not already present
                 let r = await message.save(); // Save the updated message
                 updatedMessages.push(r)
-                console.log('seen krne', r)
+                // console.log('seen krne', r)
             }
 
         }

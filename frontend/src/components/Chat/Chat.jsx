@@ -89,8 +89,9 @@ const Chat = ({selectedChat,setSelectedChat,recentChats, setRecentChats}) => {
   }
   const handleBackButtonClick = () => {
     setSelectedChat(null);
-    // setTimeout
-    setSelectedChat(null);
+    // setTimeout(()=>{
+    //   setSelectedChat(null);
+    // },1000)
   };
 
   useEffect(() => {

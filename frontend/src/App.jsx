@@ -20,17 +20,15 @@ import { setFollowNotification } from './redux/rtnFollow'
 import { setOfflineUsers } from './redux/offlineSlice'
 import { useApi } from './context/apiContext'
 import ProtectedRoute from './components/MainLayout/ProtectedRoute'
+import { setCommentNotification } from './redux/rtnComment'
 
 
 function App() {
   const msgNotifications = useSelector(state => state.rtnMsg.msgNotifications);
   const [selectedChat, setSelectedChat] = useState(null);
   const [recentChats, setRecentChats] = useState(null)
-  // const location = useLocation();
-  // useEffect(() => {
-  //   // Reset selectedChat when navigating to a different page
-  //   setSelectedChat(null);
-  // }, [location.pathname]); // This will run when the path changes
+
+  
 
   const browserRouter = createBrowserRouter([
     {
@@ -92,39 +90,10 @@ function App() {
         dispatch(setOnlineUsers(onlineUsers))
       })
 
-      // socketIo.on('userLastSeen', ({ userId, lastSeen }) => {
-      //   console.log('offline users received:', userId,lastSeen);
-      //   // dispatch(setOfflineUsers(offlineUsers))
-
-      //   const setLastSeen = async () => {
-      //     const apiUrl= `http://192.168.1.46:3000/api/v1`;
-      //     let res;
-      //     try {
-      //       //   setLoading(true)
-      //       let req = await fetch(`${apiUrl}/user/setLastSeen`, {
-      //         method: 'POST',
-      //         body: JSON.stringify({userId, lastSeen: new Date() }),
-      //         headers: {
-      //           'Content-Type': 'application/json'
-      //         },
-      //         credentials: 'include',
-      //       });
-      //       res = await req.text()
-      //       console.log(res)
-
-      //     } catch (error) {
-      //       res = { success: false, message: 'Unable to connect with server' }
-      //       console.log(error)
-      //     //   showAlert(res)
-      //     }
-
-      //   }
-
-      //   setLastSeen()
-      // })
-      socketIo.on('onlineSender', (onlineSender) => {
+      
+      socketIo.on('notifications', (notification) => {
         // console.log('Notifications received:', onlineSender);
-        dispatch(setLikeNotification(onlineSender))
+        dispatch(setLikeNotification(notification))
       })
       // socketIo.on('msgNotification', (onlineSender) => {
       //   // console.log('Notifications received:', onlineSender);
@@ -141,6 +110,10 @@ function App() {
       socketIo.on('followNotification', (onlineSender) => {
         // console.log('Follow Notifications received:', onlineSender);
         dispatch(setFollowNotification(onlineSender))
+      })
+      socketIo.on('commentNotification', (notification) => {
+        // console.log('Follow Notifications received:', onlineSender);
+        dispatch(setCommentNotification(notification))
       })
 
 
@@ -162,12 +135,11 @@ function App() {
     if (socket) {
       socket.on('msgNotification', (onlineSender) => {
         console.log('Notifications received:', onlineSender);
-        if (selectedChat && onlineSender.senderId === selectedChat._id) {
+        if (selectedChat && onlineSender.senderId._id === selectedChat._id) {
           socket.emit('markMessagesAsSeen', { otherUserId: selectedChat._id, mainUserId: user._id ,message:onlineSender});
           dispatch(setMsgNotification(
             msgNotifications.filter((m) => (m.senderId !== selectedChat._id))
           ))
-
         } else {
           dispatch(setMsgNotification(onlineSender))
         }

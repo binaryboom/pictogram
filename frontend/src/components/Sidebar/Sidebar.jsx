@@ -19,12 +19,13 @@ import Search from '../Search/Search'
 
 
 const Sidebar = () => {
-  const dispatch=useDispatch()
-  const {user}=useSelector(store=>store.auth)
-  const {likeNotifications}=useSelector(store=>store.rtn)
+  const dispatch = useDispatch()
+  const { user } = useSelector(store => store.auth)
+  const { likeNotifications } = useSelector(store => store.rtn)
   // const {msgNotifications}=useSelector(store=>store.rtn)
-  const msgNotifications = useSelector(state => state.rtnMsg.msgNotifications); 
+  const msgNotifications = useSelector(state => state.rtnMsg.msgNotifications);
   const followNotifications = useSelector(state => state.rtnFollow.followNotifications);
+  const commentNotifications = useSelector(state => state.rtnComment.commentNotifications);
   console.log(msgNotifications)
   console.log(likeNotifications)
   const navigate = useNavigate();
@@ -32,42 +33,42 @@ const Sidebar = () => {
   const { showAlert } = useAlert()
   const [loading, setLoading] = useState(false);
   const [activeIdx, setActiveIdx] = useState(0)
-  const [createPost,setCreatePost] = useState(false)
-  const [notification,setNotification] = useState(false)
-  const [showSearch,setShowSearch] = useState(false)
+  const [createPost, setCreatePost] = useState(false)
+  const [notification, setNotification] = useState(false)
+  const [showSearch, setShowSearch] = useState(false)
 
   function handleActive(idx) {
     setActiveIdx(idx);
   }
-  function handleCreatePost(){
+  function handleCreatePost() {
     setNotification(false)
     // handleSearch(false)
     setShowSearch(false)
     setCreatePost(!createPost);
   }
-  function handleProfile(){
+  function handleProfile() {
     setNotification(false)
     // handleSearch(false)
     setShowSearch(false)
     navigate(`/profile/${user.username}`)
   }
-  function handleHome(){
+  function handleHome() {
     setNotification(false)
     setShowSearch(false)
     // handleSearch(false)
     navigate(`/`)
   }
-  function handleChats(){
+  function handleChats() {
     // handleSearch(false)
     setNotification(false)
     setShowSearch(false)
     navigate(`/chats`)
   }
-  function handleNotifications(){
+  function handleNotifications() {
     setShowSearch(false)
     setNotification(!notification)
   }
-  function handleSearch(){
+  function handleSearch() {
     setNotification(false)
     setShowSearch(!showSearch)
   }
@@ -76,14 +77,14 @@ const Sidebar = () => {
   }
 
   const items = [
-    { iconClass: 'fa-solid fa-house', text: 'Home', divClass: 'sidebarHome',onClick:handleHome },
-    { iconClass: 'fa-solid fa-magnifying-glass', text: 'Search', divClass: 'sidebarSearch', isMob: true ,onClick:handleSearch },
+    { iconClass: 'fa-solid fa-house', text: 'Home', divClass: 'sidebarHome', onClick: handleHome },
+    { iconClass: 'fa-solid fa-magnifying-glass', text: 'Search', divClass: 'sidebarSearch', isMob: true, onClick: handleSearch },
     // { iconClass: 'fa-regular fa-compass', text: 'Explore', divClass: 'sidebarExplore' },
-    { iconClass: 'fa-regular fa-message', text: 'Messages', divClass: 'sidebarMessages',onClick:handleChats },
-    { iconClass: 'fa-regular fa-heart', text: `Notifications`, divClass: 'sidebarNotifications', isMob: true ,onClick:handleNotifications},
-    { iconClass: 'fa-regular fa-square-plus', text: 'Create', divClass: 'sidebarCreate' ,onClick:handleCreatePost},
-    { iconClass: 'profile', text: 'Profile', divClass: 'sidebarProfile' ,onClick:handleProfile},
-    { iconClass: 'fa-solid fa-right-from-bracket', text: 'Logout', divClass: 'sidebarLogout', isMob: true, onClick: ()=>{SidebarFunc.logout(properties) }},
+    { iconClass: 'fa-regular fa-message', text: 'Messages', divClass: 'sidebarMessages', onClick: handleChats },
+    { iconClass: 'fa-regular fa-heart', text: `Notifications`, divClass: 'sidebarNotifications', isMob: true, onClick: handleNotifications },
+    { iconClass: 'fa-regular fa-square-plus', text: 'Create', divClass: 'sidebarCreate', onClick: handleCreatePost },
+    { iconClass: 'profile', text: 'Profile', divClass: 'sidebarProfile', onClick: handleProfile },
+    { iconClass: 'fa-solid fa-right-from-bracket', text: 'Logout', divClass: 'sidebarLogout', isMob: true, onClick: () => { SidebarFunc.logout(properties) } },
   ]
 
   return (
@@ -91,7 +92,7 @@ const Sidebar = () => {
       <div className="mobNavbar">
         <Logo customStyle={'mobLogo'} />
         {items.filter((item) => item.isMob).map((i, idx) => {
-          const customIdx=idx+10;
+          const customIdx = idx + 10;
           return (
             <div
               className={`${i.divClass} mobNavbarIcons sidebarItems ${customIdx === activeIdx ? 'active' : ''}`}
@@ -103,13 +104,14 @@ const Sidebar = () => {
             >
 
               <i className={`fa-xl ${i.iconClass}`}></i>
-              {i.iconClass==='fa-regular fa-heart' && likeNotifications.length +followNotifications.length>0 && <sup className='notificationCount'>{likeNotifications.length+followNotifications.length}</sup>}
-        
+              {i.iconClass === 'fa-regular fa-heart' && commentNotifications.length + likeNotifications.length + followNotifications.length > 0 && <sup className='notificationCount'>{commentNotifications.length+likeNotifications.length + followNotifications.length}</sup>}
+
             </div>
-          )})}
+          )
+        })}
 
       </div>
-
+      {console.log('commentNotifications', commentNotifications)}
 
       <div className='sidebar'>
         {loading && (
@@ -124,20 +126,20 @@ const Sidebar = () => {
             {i.iconClass === 'profile' ?
               (<img draggable='false' className='sidebarProfileImg' src={user?.profilePicture || '/person.png'} alt='profile'></img>) :
               <>
-              <i className={`fa-lg ${i.iconClass}`}></i>
-                
+                <i className={`fa-lg ${i.iconClass}`}></i>
+
               </>
             }
             <span className='sidebarIconInfo sidebarIconDisplay'>{i.text}
-            {i.iconClass==='fa-regular fa-heart' && likeNotifications.length+followNotifications.length>0 && <sup className='notificationCount'>{likeNotifications.length+followNotifications.length}</sup>}
+              {i.iconClass === 'fa-regular fa-heart' && commentNotifications.length + likeNotifications.length + followNotifications.length > 0 && <sup className='notificationCount'>{commentNotifications.length + likeNotifications.length + followNotifications.length}</sup>}
             </span>
-            {i.iconClass==='fa-regular fa-message' && msgNotifications?.length>0 && <sup className='notificationCount'>{msgNotifications?.length}</sup>}
+            {i.iconClass === 'fa-regular fa-message' && msgNotifications?.length > 0 && <sup className='notificationCount'>{msgNotifications?.length}</sup>}
           </div>
         ))}
       </div>
       {createPost && <CreatePost user={user} handleCreatePost={handleCreatePost} />}
       {notification && <Notifications handleNotifications={handleNotifications} />}
-      {showSearch && <Search handleSearch={handleSearch}  />}
+      {showSearch && <Search handleSearch={handleSearch} />}
     </>
   )
 }
