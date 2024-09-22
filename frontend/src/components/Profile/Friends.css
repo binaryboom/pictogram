@@ -2,3 +2,24 @@
     font-weight: bold;
     font-size: 1.2rem;
 }
+
+.fullPostLikes{
+    position: absolute;
+}
+
+.fullPostCard .notifications{
+    margin-left: 0;
+}
+.fullPostCard .followersCount{
+    font-size: 0.8rem;
+}
+.fullPostCardLeft .fa-circle-xmark{
+    font-size: 1.5rem;
+}
+.fullPostCardLeft .suggestedUsername{
+    opacity: 1;
+    font-size: 0.8rem;
+}
+.fullPostCardLeft .notificationRightCorner{
+    right: unset;
+}

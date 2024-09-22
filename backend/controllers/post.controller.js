@@ -97,6 +97,7 @@ const getAllPosts = async (req, res) => {
         const allPosts = await Post.find().sort({ createdAt: -1 })
             .populate({ path: 'author', select: 'username profilePicture isVerified' })
             .populate({ path: 'comments', select: 'username profilePicture isVerified' })
+            .populate({ path: 'likes', select: 'username profilePicture isVerified',options: { sort: { createdAt: -1 } } })
         return res.status(200).json({
             success: true,
             allPosts
@@ -115,7 +116,7 @@ const getPostByUser = async (req, res) => {
         const authorId = req.id;
         const allPosts = await Post.find({ author: authorId }).sort({ createdAt: -1 })
             .populate({ path: 'author', select: 'username profilePicture' })
-            .populate({ path: 'comments', select: 'username profilePicture' })
+            .populate({ path: 'comments', select: 'username profilePicture',options: { sort: { createdAt: -1 } } })
         return res.status(200).json({
             success: true,
             allPosts
@@ -147,6 +148,7 @@ const getPostById = async (req, res) => {
                 },
                 options: { sort: { createdAt: -1 } }
             })
+            .populate({ path: 'likes', select: 'username profilePicture isVerified',options: { sort: { createdAt: -1 } } })
         // .populate({ path: 'comments', select: 'username profilePicture' })
 
         if (!post) {

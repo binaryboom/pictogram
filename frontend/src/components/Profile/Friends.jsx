@@ -3,10 +3,10 @@ import './Friends.css'
 import '../Notifications/Notifications.css'
 import { useNavigate } from 'react-router-dom'
 
-const Friends = ({ fr, closeDialog, heading }) => {
+const Friends = ({ fr, closeDialog, heading ,customClass}) => {
     const navigate = useNavigate()
     return (
-        <div className="dialog notifications">
+        <div className={`dialog notifications ${customClass}`}>
             <div className="notificationRightCorner">
                 <i onClick={closeDialog} className="fa-regular fa-2xl fa-circle-xmark"></i>
             </div>
@@ -33,7 +33,6 @@ const Friends = ({ fr, closeDialog, heading }) => {
 
 
                 {fr.length < 1 && <div className="notificationMsg">No one here</div>}
-
 
             </div>
         </div>

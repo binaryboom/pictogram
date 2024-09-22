@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import PostFunc from '../Post/PostFunc'
 import { formatDistanceToNow ,formatDistanceToNowStrict } from 'date-fns';
 import PostDialogFunc from '../PostDialog/PostDialogFunc'
+import Friends from '../Profile/Friends'
 
 
 
@@ -58,6 +59,10 @@ const FullPost = () => {
     const { showAlert } = useAlert();
     const properties = {
         apiUrl, setLoading, navigate, showAlert, location, dispatch, posts, user, handleFullPost
+    }
+    const [showLikes,setShowLikes] = useState(false)
+    function handleLikes() {
+        setShowLikes(!showLikes)
     }
     const fetchPostById = async (id) => {
         let res;
@@ -139,6 +144,7 @@ const FullPost = () => {
         <div className="dialog">
             <div className='fullPostCard'>
                 <div className="fullPostCardLeft">
+                {showLikes && <Friends fr={post.likes} closeDialog={handleLikes} heading={'Liked By :'} customClass={'fullPostLikes'} />}
                     <div className="userInfo">
                         <div className="postCardLeft">
                             <div onClick={() => { navigate(`/profile/${post.author.username}`) }} className="authorImg">
@@ -172,7 +178,7 @@ const FullPost = () => {
                             <i onClick={() => { PostFunc.handleSavedPost(post._id, properties) }} className={`fa-bookmark ${user.saved.includes(post._id) ? 'fa-solid' : 'fa-regular'} `} ></i>
                         </div>
                     </div>
-                    <div className='likeCount' style={{ display: post.likes.length > 0 ? '' : 'none' }}>{post.likes.length > 1
+                    <div onClick={handleLikes} className='likeCount' style={{ display: post.likes.length > 0 ? '' : 'none' }}>{post.likes.length > 1
                         ? `${post.likes.length} likes`
                         : `${post.likes.length} like`}</div>
                 </div>

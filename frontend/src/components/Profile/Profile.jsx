@@ -36,7 +36,6 @@ const Profile = () => {
   function closeDialog(){
     setShowFollowing(false)
     setShowFollowers(false)
-
   }
 
   function handleProfile(profile) {
@@ -130,8 +129,8 @@ const Profile = () => {
             </>
           )}
         </div>
-        {showFollowers && <Friends fr={profile.followers} closeDialog={closeDialog} heading={'Followers :'} />}
-        {showFollowing && <Friends fr={profile.following} closeDialog={closeDialog} heading={'Following :'}/>}
+        {showFollowers && <Friends fr={profile.followers} closeDialog={closeDialog} heading={'Followers :'} customClass={'no'} />}
+        {showFollowing && <Friends fr={profile.following} closeDialog={closeDialog} heading={'Following :'} customClass={'no'}/>}
       </div>
     </div>
   )
