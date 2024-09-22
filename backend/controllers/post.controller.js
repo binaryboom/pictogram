@@ -197,6 +197,7 @@ const likeUnlike = async (req, res) => {
             // doUnlike
             await post.updateOne({ $pull: { likes: mainUserId } })
             const postLikes = await Post.findById(postId).select('likes')
+            .populate({ path: 'likes', select: 'username profilePicture isVerified',options: { sort: { createdAt: -1 } } })
             if(post.author.toString()!==mainUserId){
                 const notification={
                     type:'unlike',
@@ -217,6 +218,7 @@ const likeUnlike = async (req, res) => {
             // do Like
             await post.updateOne({ $addToSet: { likes: mainUserId } })
             const postLikes = await Post.findById(postId).select('likes')
+            .populate({ path: 'likes', select: 'username profilePicture isVerified',options: { sort: { createdAt: -1 } } })
             const mainUser=await User.findById(mainUserId).select('username profilePicture')
             // if(post.author._id)
             if(post.author.toString()!==mainUserId){
