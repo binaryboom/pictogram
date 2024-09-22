@@ -12,6 +12,7 @@ import ProfileFunc from '../Profile/ProfileFunc.js'
 // import data from '@emoji-mart/data'
 // import Picker from '@emoji-mart/react'
 import EmojiPicker from 'emoji-picker-react';
+import Friends from '../Profile/Friends.jsx'
 
 
 
@@ -32,6 +33,10 @@ const Post = ({ post }) => {
     const [dialog, showDialog] = useState(false);
     function handleDialog() {
         showDialog(!dialog);
+    }
+    const [showLikes,setShowLikes] = useState(false)
+    function handleLikes() {
+        setShowLikes(!showLikes)
     }
     const [text, setText] = useState('')
     function handleInput(e) {
@@ -93,7 +98,7 @@ const Post = ({ post }) => {
                     <i onClick={() => { PostFunc.handleSavedPost(post._id, properties) }} className={`fa-bookmark ${user.saved.includes(post._id) ? 'fa-solid' : 'fa-regular'} `} ></i>
                 </div>
             </div>
-            <div className='likeCount' style={{ display: post.likes.length > 0 ? '' : 'none' }}>{post.likes.length > 1
+            <div onClick={handleLikes} className='likeCount' style={{ display: post.likes.length > 0 ? '' : 'none' }}>{post.likes.length > 1
                 ? ` ${post.likes.length} likes`
                 : ` ${post.likes.length} like`}</div>
             <div className='caption'><span>{post.author.username} :</span> {post.caption}</div>
@@ -123,6 +128,7 @@ const Post = ({ post }) => {
 
             {/* {showPicker &&<> <EmojiPicker onEmojiClick={addEmoji} skinTonesDisabled={true} style={{position:'absolute',left:'1vw',right:'1vw'}}  height={'80%'} width={'95%'} previewConfig={{showPreview:false}}/></>} */}
             {dialog && <PostDialog handleDialog={handleDialog} user={user} post={post} />}
+            {showLikes && <Friends fr={post.likes} closeDialog={handleLikes} heading={'Liked By :'} customClass={'no'}/>}
         </div>
 
     )

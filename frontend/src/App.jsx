@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider, useLocation } from 'react-router-dom'
 import './App.css'
 import Signup from './components/Signup/Signup'
 import Login from './components/Login/Login'
@@ -25,6 +25,12 @@ import ProtectedRoute from './components/MainLayout/ProtectedRoute'
 function App() {
   const msgNotifications = useSelector(state => state.rtnMsg.msgNotifications);
   const [selectedChat, setSelectedChat] = useState(null);
+  // const location = useLocation();
+  // useEffect(() => {
+  //   // Reset selectedChat when navigating to a different page
+  //   setSelectedChat(null);
+  // }, [location.pathname]); // This will run when the path changes
+
   const browserRouter = createBrowserRouter([
     {
       path: '/',

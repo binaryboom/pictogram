@@ -86,6 +86,8 @@ const Chat = ({selectedChat,setSelectedChat}) => {
   }
   const handleBackButtonClick = () => {
     setSelectedChat(null);
+    // setTimeout
+    setSelectedChat(null);
   };
 
   useEffect(() => {
@@ -207,7 +209,7 @@ const Chat = ({selectedChat,setSelectedChat}) => {
                   <div className="chatLeftCardRight">
                     <div className="cardWithCount">
                       <div className="chatLeftUserUsername">{rc.username}
-                        {rc.isVerified && <abbr title="Founder (Pictogram)"><img className="chatBlueTick" src="/verified.png" alt="" /></abbr>}
+                        {rc.isVerified===true  && <abbr title="Founder (Pictogram)"><img className="chatBlueTick" src="/verified.png" alt="" /></abbr>}
                       </div>
                       {msgCount > 0 && <div className="notificationCount msgCnt">{msgCount}</div>}
                     </div>
@@ -230,7 +232,7 @@ const Chat = ({selectedChat,setSelectedChat}) => {
                     <div className="chatLeftCardRight">
                       <div className="cardWithCount">
                         <div className="chatLeftUserUsername">{rc.username}
-                          {rc.isVerified && <abbr title="Founder (Pictogram)"><img className="chatBlueTick" src="/verified.png" alt="" /></abbr>}
+                          {rc.isVerified===true  && <abbr title="Founder (Pictogram)"><img className="chatBlueTick" src="/verified.png" alt="" /></abbr>}
                         </div>
                         {msgCount > 0 && <div className="notificationCount msgCnt">{msgCount}</div>}
                       </div>
@@ -268,7 +270,7 @@ const Chat = ({selectedChat,setSelectedChat}) => {
                 </div>
                 <div className="chatRightCardRight">
                   <div onClick={() => { navigate(`/profile/${selectedChat.username}`) }} className="chatRightCardUserUsername">{selectedChat.username}
-                    {selectedChat.isVerified && <abbr title="Founder (Pictogram)"><img className="chatBlueTick" src="/verified.png" alt="" /></abbr>}
+                    {(selectedChat.isVerified===true || selectedChat.isVerified==='true') && <abbr title="Founder (Pictogram)"><img className="chatBlueTick" src="/verified.png" alt="" /></abbr>}
                   </div>
 
                   <div style={{ color: isUserOnline(selectedChat._id) ? 'green' : 'black' }} className="chatRightCardLastSeen">{isUserOnline(selectedChat._id) ? 'online' : `${getUserLastSeen(selectedChat.lastSeen)}`}</div>

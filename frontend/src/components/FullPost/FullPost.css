@@ -18,6 +18,7 @@
 }
 .fullPostCardLeft{
     padding-bottom: 0;
+    position: relative;
 }
 .fullPostCardRight{
     border-left: 1px solid black;
