@@ -170,7 +170,7 @@ const FullPost = () => {
                     </div>
                     <div className="postButtons">
                         <div className="postCardLeft">
-                            <i onClick={() => { PostFunc.likeUnlike(post._id, properties) }} style={{ color: post.likes.some(like => like._id === user._id) ? 'red' : '' }} className={`fa-heart ${post.likes.includes(user._id) ? 'fa-solid' : 'fa-regular'} `} ></i>
+                            <i onClick={() => { PostFunc.likeUnlike(post._id, properties) }} style={{ color: post.likes.some(like => like._id === user._id) ? 'red' : '' }} className={`fa-heart ${post.likes.some(like => like._id === user._id) ? 'fa-solid' : 'fa-regular'} `} ></i>
                             {/* <i className="fa-regular fa-comment"></i> */}
                             <i className="fa-regular fa-share-from-square"></i>
                         </div>
