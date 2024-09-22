@@ -9,7 +9,7 @@ import { format, formatDistance, formatDistanceToNow, isToday, isYesterday } fro
 import useGetRTM from '../../hooks/useGetRTM'
 import { setMsgNotification } from '../../redux/rtnMsg'
 
-const Chat = ({selectedChat,setSelectedChat}) => {
+const Chat = ({selectedChat,setSelectedChat,recentChats, setRecentChats}) => {
   const { socket } = useSelector((store) => store.socketio);
   const location = useLocation();
   const profile = location.state?.profile;
@@ -26,7 +26,7 @@ const Chat = ({selectedChat,setSelectedChat}) => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [text, setText] = useState('')
-  const [recentChats, setRecentChats] = useState(null)
+  // const [recentChats, setRecentChats] = useState(null)
   const [allUsers, setAllUsers] = useState(null)
   const [messages, setMessages] = useState([])
   const [showAllUsers, setShowAllUsers] = useState(false)
@@ -35,6 +35,9 @@ const Chat = ({selectedChat,setSelectedChat}) => {
   const isUserOnline = (userId) => onlineUsers?.some((user) => user._id === userId);
   const getUserLastSeen = (date) => {
     const lastSeenDate = new Date(date);
+    if (isNaN(lastSeenDate.getTime())) {
+      return 'unknown';
+  }
     if (isToday(lastSeenDate)) {
       return `last seen today at ${format(lastSeenDate, 'hh:mm a')}`;
     } else if (isYesterday(lastSeenDate)) {
@@ -77,7 +80,7 @@ const Chat = ({selectedChat,setSelectedChat}) => {
     // console.log(`msgNots`,msgNotifications)
     // socket.on('singleMessageSeen',)
     dispatch(setMsgNotification(
-      msgNotifications.filter((m) => (m.senderId !== chat._id))
+      msgNotifications.filter((m) => (m.senderId && m.senderId._id !== chat._id))
     ))
     setMessages([])
     ChatFunc.seenAllMsg(chat._id,properties)
@@ -99,7 +102,7 @@ const Chat = ({selectedChat,setSelectedChat}) => {
   }, [])
 
   useEffect(() => {
-    console.log('onlineUsers changed:', onlineUsers);
+    // console.log('onlineUsers changed:', onlineUsers);
     ChatFunc.getAllUsers(properties);
     ChatFunc.getRecentChats(properties);
   }, [onlineUsers])
@@ -152,9 +155,13 @@ const Chat = ({selectedChat,setSelectedChat}) => {
   // }, [socket,selectedChat, dispatch]);
 
   function getMsgCount(senderId) {
+    // console.log('senderid cnt',senderId)
+    // console.log('msg nots cnt',msgNotifications)
+
     let cnt = 0
     msgNotifications.map((m) => {
-      m.senderId === senderId && m.receiverId === user._id ? cnt++ : ''
+      // console.log('m of msg nots',m)
+      m.senderId && m.senderId._id === senderId && m.receiverId === user._id ? cnt++ : ''
     })
     return cnt
   }
@@ -213,7 +220,7 @@ const Chat = ({selectedChat,setSelectedChat}) => {
                       </div>
                       {msgCount > 0 && <div className="notificationCount msgCnt">{msgCount}</div>}
                     </div>
-                    <div style={{ color: isUserOnline(rc._id) ? 'green' : 'black' }} className="chatLeftCardLastMsg">{isUserOnline(rc._id) ? 'online' : `${getUserLastSeen(rc.lastSeen)}`}</div>
+                    <div style={{ color: isUserOnline(rc._id) ? 'green' : 'black' }} className="chatLeftCardLastMsg">{isUserOnline(rc._id) ? 'online' : `${getUserLastSeen(rc?.lastSeen)}`}</div>
                     {/* <div className="chatLeftCardLastMsg">{isUserOnline(rc._id) ? 'online' : `Last seen ${formatDistanceToNow(new Date(getUserLastSeen(rc._id)))}`}</div> */}
                   </div>
                 </div>
@@ -301,9 +308,9 @@ const Chat = ({selectedChat,setSelectedChat}) => {
                           {isToday(messageDate) ? 'Today' : isYesterday(messageDate) ? 'Yesterday' : messageDate}
                         </div>
                       )}
-                      <div className={`messageWrapper ${m.senderId === user._id ? 'mainUserMsg' : 'otherUserMsg'}`}>
+                      <div className={`messageWrapper ${(m.senderId._id === user._id || m.senderId===user._id) ? 'mainUserMsg' : 'otherUserMsg'}`}>
                         <span>{m.message}</span>
-                        <sub className="messageTime">{format(new Date(m.createdAt), 'hh:mm a')}{m.senderId === user._id && <i style={{ fontWeight: `${m.seenBy.includes(selectedChat._id) ? '900' : '500'}` }} class="fa-solid fa-lg fa-circle-check"></i>}</sub>
+                        <sub className="messageTime">{format(new Date(m.createdAt), 'hh:mm a')}{(m.senderId._id === user._id || m.senderId===user._id) && <i style={{ fontWeight: `${m.seenBy.includes(selectedChat._id) ? '900' : '500'}` }} class="fa-solid fa-lg fa-circle-check"></i>}</sub>
                       </div>
                     </React.Fragment>
                   );

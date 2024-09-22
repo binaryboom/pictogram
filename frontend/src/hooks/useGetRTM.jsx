@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { setMsgNotification } from '../redux/rtnMsg';
 
-const useGetRTM = ({ setMessages, selectedChat }) => {
+const useGetRTM = ({ setMessages, selectedChat ,setRecentChats}) => {
     // const msgNotifications = useSelector(store => store.rtnMsg.msgNotifications);
     const { socket } = useSelector(store => store.socketio)
     // const dispatch = useDispatch()
@@ -13,9 +13,9 @@ const useGetRTM = ({ setMessages, selectedChat }) => {
 
 
         const handleNewMessage = (newMsg) => {
-            // console.log('New message received:', newMsg); // Debugging
-            // console.log('sel chat:', selectedChat); // Debugging
-            if (selectedChat._id === newMsg.senderId) {
+            console.log('New message received:', newMsg); // Debugging
+            console.log('sel chat:', selectedChat); // Debugging
+            if (selectedChat?._id === newMsg?.senderId?._id || selectedChat?._id === newMsg?.senderId) {
 
                 setMessages((prevMessages) => {
                     if (!prevMessages || prevMessages.length === 0) {
@@ -23,11 +23,6 @@ const useGetRTM = ({ setMessages, selectedChat }) => {
                     }
                     return [...prevMessages, newMsg];
                 });
-                // console.log('before', msgNotifications)
-                // dispatch(setMsgNotification(
-                //     msgNotifications.filter((m) => (m.senderId !== selectedChat._id))
-                // ))
-                // console.log('after', msgNotifications)
             }
 
 
@@ -50,7 +45,7 @@ const useGetRTM = ({ setMessages, selectedChat }) => {
                     return prevMessages.map((m) => {
                         // Return a new object for the message with the updated 'seen' property
                         if (m._id === messageId) {
-                            return { ...m, seen: true, seenBy: Array.from(new Set([...m.seenBy, m.senderId, m.receiverId])) }; // Create a new object with 'seen' set to true
+                            return { ...m, seen: true, seenBy: Array.from(new Set([...m.seenBy, m.senderId._id, m.receiverId])) }; // Create a new object with 'seen' set to true
                         }
                         return m; // Return the message unchanged if it doesn't match
                     });
@@ -59,16 +54,16 @@ const useGetRTM = ({ setMessages, selectedChat }) => {
             });
         };
         function handleMultipleSeen({ updatedMessages }) {
-            console.log('multi', updatedMessages)
+            // console.log('multi', updatedMessages)
             setMessages((prevMessages) => {
                 if (prevMessages) {
                     return prevMessages.map((m) => {
                         const updatedMessage = updatedMessages.find((u) => u._id === m._id);
                         // Return a new object for each message with 'seen' set to true and updated 'seenBy' if found
-                        return { 
+                        return {
                             ...m,
-                            seen: true, 
-                            seenBy: updatedMessage ? updatedMessage.seenBy : m.seenBy 
+                            seen: true,
+                            seenBy: updatedMessage ? updatedMessage.seenBy : m.seenBy
                         };
                     });
                 }

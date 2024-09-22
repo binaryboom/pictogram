@@ -94,8 +94,9 @@ const getAllMsg = async (receiverId, properties) => {
 }
 
 const getRecentChats = async (properties) => {
-    const { apiUrl, setLoading, navigate, showAlert, dispatch, user, setRecentChats, selectedChat, setSelectedChat } = properties;
+    const { apiUrl, setLoading, navigate, showAlert, dispatch, user, selectedChat, setRecentChats,setSelectedChat } = properties;
     let res;
+    // console.log('setRecentChats:', setRecentChats);
     try {
         // setLoading(true)
         let req = await fetch(`${apiUrl}/message/getRecentChats`, {

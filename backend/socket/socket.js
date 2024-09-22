@@ -63,12 +63,26 @@ io.on('connection', (socket) => {
         res = { success: false, message: 'Unable to connect with server' }
         console.log(error)
       }
-
+      if (receiverSocketId) {
+        io.to(receiverSocketId).emit('singleMsgSeen', { otherUserId, mainUserId, messageId });
+      } else {
+        console.log('Receiver socket not found');
+      }
     }
     markMsgAsSeen()
     const messageId = message._id
+    console.log('single msg seen o',otherUserId)
+    console.log('single msg seen m',mainUserId)
+    console.log('single msg seen msg',messageId)
     // Emit to all users in the chat about the seen status
-    socket.to(getReceiverSocketId(otherUserId)).emit('singleMsgSeen', { otherUserId, mainUserId, messageId });
+    // const receiverSocketId = getReceiverSocketId(otherUserId);
+    // if (receiverSocketId) {
+    //   socket.to(receiverSocketId).emit('singleMsgSeen', { otherUserId, mainUserId, messageId });
+    // } else {
+    //   console.log('Receiver socket not found');
+    // }
+
+    // io.to(getReceiverSocketId(otherUserId)).emit('singleMsgSeen', { otherUserId, mainUserId, messageId });
   });
 
   socket.on('disconnect', () => {
@@ -77,8 +91,8 @@ io.on('connection', (socket) => {
       console.log(`Disconnected \n UserId=${userId} \n SocketId=${socket.id}`);
 
       const setLastSeen = async () => {
-        const apiUrl= process.env.URL;
-        // const apiUrl = 'http://localhost:3000';
+        // const apiUrl= process.env.URL;
+        const apiUrl = 'http://localhost:3000';
         let res;
         try {
           //   setLoading(true)

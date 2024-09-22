@@ -25,6 +25,7 @@ import ProtectedRoute from './components/MainLayout/ProtectedRoute'
 function App() {
   const msgNotifications = useSelector(state => state.rtnMsg.msgNotifications);
   const [selectedChat, setSelectedChat] = useState(null);
+  const [recentChats, setRecentChats] = useState(null)
   // const location = useLocation();
   // useEffect(() => {
   //   // Reset selectedChat when navigating to a different page
@@ -34,7 +35,7 @@ function App() {
   const browserRouter = createBrowserRouter([
     {
       path: '/',
-      element: <ProtectedRoute> <MainLayout selectedChat={selectedChat} setSelectedChat={setSelectedChat} /> </ProtectedRoute>,
+      element: <ProtectedRoute> <MainLayout selectedChat={selectedChat} setSelectedChat={setSelectedChat} recentChats={recentChats} setRecentChats={setRecentChats} /> </ProtectedRoute>,
       children: [
         {
           path: '/',
@@ -87,7 +88,7 @@ function App() {
       dispatch(setSocket(socketIo))
 
       socketIo.on('getOnlineUsers', (onlineUsers) => {
-        console.log('Online users received:', onlineUsers);
+        // console.log('Online users received:', onlineUsers);
         dispatch(setOnlineUsers(onlineUsers))
       })
 
@@ -121,25 +122,25 @@ function App() {
 
       //   setLastSeen()
       // })
-      socketIo.on('notifications', (notifications) => {
-        // console.log('Notifications received:', notifications);
-        dispatch(setLikeNotification(notifications))
+      socketIo.on('onlineSender', (onlineSender) => {
+        // console.log('Notifications received:', onlineSender);
+        dispatch(setLikeNotification(onlineSender))
       })
-      // socketIo.on('msgNotification', (notifications) => {
-      //   // console.log('Notifications received:', notifications);
-      //   if (selectedChat && notifications.senderId === selectedChat._id) {
+      // socketIo.on('msgNotification', (onlineSender) => {
+      //   // console.log('Notifications received:', onlineSender);
+      //   if (selectedChat && onlineSender.senderId === selectedChat._id) {
       //     dispatch(setMsgNotification(
       //       msgNotifications.filter((m) => (m.senderId !== selectedChat._id))
       //     ))
 
       //   } else {
-      //     dispatch(setMsgNotification(notifications))
+      //     dispatch(setMsgNotification(onlineSender))
       //   }
       // })
 
-      socketIo.on('followNotification', (notifications) => {
-        // console.log('Follow Notifications received:', notifications);
-        dispatch(setFollowNotification(notifications))
+      socketIo.on('followNotification', (onlineSender) => {
+        // console.log('Follow Notifications received:', onlineSender);
+        dispatch(setFollowNotification(onlineSender))
       })
 
 
@@ -159,17 +160,29 @@ function App() {
 
   useEffect(() => {
     if (socket) {
-      socket.on('msgNotification', (notifications) => {
-        // console.log('Notifications received:', notifications);
-        if (selectedChat && notifications.senderId === selectedChat._id) {
-          socket.emit('markMessagesAsSeen', { otherUserId: selectedChat._id, mainUserId: user._id ,message:notifications});
+      socket.on('msgNotification', (onlineSender) => {
+        console.log('Notifications received:', onlineSender);
+        if (selectedChat && onlineSender.senderId === selectedChat._id) {
+          socket.emit('markMessagesAsSeen', { otherUserId: selectedChat._id, mainUserId: user._id ,message:onlineSender});
           dispatch(setMsgNotification(
             msgNotifications.filter((m) => (m.senderId !== selectedChat._id))
           ))
 
         } else {
-          dispatch(setMsgNotification(notifications))
+          dispatch(setMsgNotification(onlineSender))
         }
+        setRecentChats((prevChats) => {
+          const chatToUpdate = prevChats.find((rc) => rc._id === onlineSender.senderId?._id || rc._id === onlineSender.senderId);
+
+          if (chatToUpdate) {
+              return [
+                  { ...onlineSender.senderId},
+                  ...prevChats.filter((rc) => rc._id !== onlineSender.senderId._id),
+              ];
+          } else {
+              return [{ ...onlineSender.senderId }, ...prevChats];
+          }
+      });
       })
 
       return () => {

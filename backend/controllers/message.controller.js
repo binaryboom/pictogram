@@ -26,13 +26,21 @@ const sendMsg = async (req, res) => {
             seenBy: [senderId]
         })
         // console.log(newMsg.message)
+        let onlineSender = '';
         if (newMsg) {
             conversation.message.push(newMsg._id);
             // newMsg.save()
-            await Promise.all([
-                conversation.save(),
-                newMsg.save()
-            ]);
+            // await Promise.all([
+            //     conversation.save(),
+            //   onlineSender=  (await newMsg.save()).populate({path:'senderId',select:'username profilePicture isVerified'})
+            // ]);
+            await newMsg.save();
+
+            // Populate sender details after saving the message
+            onlineSender = await newMsg.populate({ path: 'senderId', select: 'username profilePicture isVerified' })
+
+            // Save the conversation asynchronously
+            await conversation.save();
         }
         const receiverSocketId = getReceiverSocketId(receiverId)
         // const pop=await Message.findOne(newMsg)
@@ -44,7 +52,7 @@ const sendMsg = async (req, res) => {
         // console.log('Emitting new message to:', receiverSocketId);
         if (receiverSocketId) {
             io.to(receiverSocketId).emit('newMsg', newMsg);
-            io.to(receiverSocketId).emit('msgNotification', newMsg);
+            io.to(receiverSocketId).emit('msgNotification', onlineSender);
         }
         // await Promise.all([
         //     conversation.save(),newMsg.save()
@@ -71,10 +79,10 @@ const getMsg = async (req, res) => {
         const conversation = await Conversation.findOne({
             participaints: { $all: [senderId, receiverId] }
         })
-        // .populate({
-        //     path: 'message',
-        //     options: { limit: 20, sort: { createdAt: -1 } }  // Sort messages by date and limit to 20
-        // });
+            // .populate({
+            //     path: 'message',
+            //     options: { limit: 20, sort: { createdAt: -1 } }  // Sort messages by date and limit to 20
+            // });
             .populate('message')
         if (!conversation) {
             return res.status(200).json({
@@ -190,7 +198,7 @@ const markAllMsgAsSeen = async (req, res) => {
             }
 
         }
-        if(updatedMessages.length>0){
+        if (updatedMessages.length > 0) {
             io.to(getReceiverSocketId(receiverId)).emit('multipleMsgSeen', { updatedMessages });
         }
         return res.status(200).json({
