@@ -92,8 +92,8 @@ io.on('connection', (socket) => {
       console.log(`Disconnected \n UserId=${userId} \n SocketId=${socket.id}`);
 
       const setLastSeen = async () => {
-        // const apiUrl= process.env.URL;
-        const apiUrl = 'http://localhost:3000';
+        const apiUrl= process.env.URL;
+        // const apiUrl = 'http://localhost:3000';
         let res;
         try {
           //   setLoading(true)
