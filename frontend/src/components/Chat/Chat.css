@@ -413,7 +413,11 @@
     .chatPageRightTop {
         max-height: 7vh;
     }
-
+    .getAllUsers {
+        position: fixed;
+        top: 75%;
+        right: 8vw;
+    }
     .getAllUsers i {
         font-size: 2rem;
         padding: 1.6rem;
