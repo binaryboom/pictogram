@@ -145,7 +145,7 @@ function App() {
     if (socket) {
       socket.on('msgNotification', (onlineSender) => {
         console.log('Notifications received:', onlineSender);
-        if (selectedChatRef.current._id && onlineSender.senderId._id === selectedChatRef.current._id) {
+        if (selectedChatRef.current && onlineSender.senderId._id === selectedChatRef.current._id) {
           sendAudioRef2.current.play(); 
           socket.emit('markMessagesAsSeen', { otherUserId: selectedChatRef.current._id, mainUserId: user._id, message: onlineSender });
           dispatch(setMsgNotification(
