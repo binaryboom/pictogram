@@ -323,7 +323,7 @@ const Chat = ({selectedChat,setSelectedChat,recentChats, setRecentChats}) => {
 
             <div className="chatPageRightBottom">
               {/* <div className="chatRightCardLeft"> */}
-              <textarea onKeyDown={handleKeyDown} value={text} onChange={handleInput} type='text' placeholder='Message......' />
+              <textarea ref={inputRef} onKeyDown={handleKeyDown} value={text} onChange={handleInput} type='text' placeholder='Message......' />
               {/* </div> */}
               {/* <div className="chatRightCardRight"> */}
               {text && <button onClick={() => { ChatFunc.sendMsg(selectedChat._id, properties);inputRef.current.focus();  }} className='sendMsgBtn'>Send</button>}
