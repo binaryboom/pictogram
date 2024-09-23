@@ -43,8 +43,8 @@ io.on('connection', (socket) => {
     console.log('mm', otherUserId, mainUserId, message,message._id, 'mm')
     // await updateMessagesAsSeen(chatId, userId);
     const markMsgAsSeen = async () => {
-      // const apiUrl= process.env.URL;
-      const apiUrl = 'http://localhost:3000';
+      const apiUrl= process.env.URL;
+      // const apiUrl = 'http://localhost:3000';
       let res;
       try {
         let req = await fetch(`${apiUrl}/api/v1/message/seen/${message._id}`, {
