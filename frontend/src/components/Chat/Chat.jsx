@@ -10,6 +10,7 @@ import useGetRTM from '../../hooks/useGetRTM'
 import { setMsgNotification } from '../../redux/rtnMsg'
 
 const Chat = ({selectedChat,setSelectedChat,recentChats, setRecentChats}) => {
+  const sendAudioRef = useRef(null);
   const { socket } = useSelector((store) => store.socketio);
   const location = useLocation();
   const profile = location.state?.profile;
@@ -65,6 +66,7 @@ const Chat = ({selectedChat,setSelectedChat,recentChats, setRecentChats}) => {
   }
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
+      sendAudioRef.current.play(); 
       if (e.shiftKey) {
         return;
       }
@@ -323,10 +325,11 @@ const Chat = ({selectedChat,setSelectedChat,recentChats, setRecentChats}) => {
 
             <div className="chatPageRightBottom">
               {/* <div className="chatRightCardLeft"> */}
+              <audio style={{ display: 'none' }} ref={sendAudioRef} src="/send.mp3" />
               <textarea ref={inputRef} onKeyDown={handleKeyDown} value={text} onChange={handleInput} type='text' placeholder='Message......' />
               {/* </div> */}
               {/* <div className="chatRightCardRight"> */}
-              {text && <button onClick={() => { ChatFunc.sendMsg(selectedChat._id, properties);inputRef.current.focus();  }} className='sendMsgBtn'>Send</button>}
+              {text && <button onClick={() => { ChatFunc.sendMsg(selectedChat._id, properties);inputRef.current.focus(); sendAudioRef.current.play();  }} className='sendMsgBtn'>Send</button>}
               {/* </div> */}
             </div>
           </>
