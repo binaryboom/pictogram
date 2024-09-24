@@ -8,6 +8,7 @@ import ChatFunc from './ChatFunc'
 import { format, formatDistance, formatDistanceToNow, isToday, isYesterday } from 'date-fns';
 import useGetRTM from '../../hooks/useGetRTM'
 import { setMsgNotification } from '../../redux/rtnMsg'
+import Linkify from 'react-linkify';
 
 const Chat = ({selectedChat,setSelectedChat,recentChats, setRecentChats}) => {
   const sendAudioRef = useRef(null);
@@ -312,7 +313,7 @@ const Chat = ({selectedChat,setSelectedChat,recentChats, setRecentChats}) => {
                         </div>
                       )}
                       <div className={`messageWrapper ${(m.senderId._id === user._id || m.senderId===user._id) ? 'mainUserMsg' : 'otherUserMsg'}`}>
-                        <span>{m.message}</span>
+                        <span><Linkify>{m.message}</Linkify></span>
                         <sub className="messageTime">{format(new Date(m.createdAt), 'hh:mm a')}{(m.senderId._id === user._id || m.senderId===user._id) && <i style={{ fontWeight: `${m.seenBy.includes(selectedChat._id) ? '900' : '500'}` }} class="fa-solid fa-lg fa-circle-check"></i>}</sub>
                       </div>
                     </React.Fragment>

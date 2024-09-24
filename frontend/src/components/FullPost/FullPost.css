@@ -77,9 +77,10 @@
   /* white-space:; */
   font-size: 0.7rem;
   font-weight: 500;
-  word-break: break-all;
+  word-break: break-word;
   /* opacity: 0.7; */
 }
+
 .allComments .itemRight{
   align-items: center;
   max-width: 65%;

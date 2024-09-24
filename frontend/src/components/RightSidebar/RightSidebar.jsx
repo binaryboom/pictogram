@@ -43,7 +43,7 @@ const RightSidebar = () => {
           {user?.isVerified && <div className="postBlueTick"><abbr title="Founder (Pictogram)"><img src="/verified.png" alt="" /></abbr></div>}   
         </div>
         <div className="itemRight">
-          <span onClick={()=>{SidebarFunc.logout(properties)}} className='followSuggested' style={{ color: '#0095F6' }}>Logout</span>
+          <span onClick={()=>{SidebarFunc.logout(properties)}} className='followSuggested' style={{ color: '#ED4956' }}>Logout</span>
         </div>
       </div>
 

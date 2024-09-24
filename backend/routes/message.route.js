@@ -11,5 +11,6 @@ router.route('/getRecentChats').get(isAuthenticated,messageController.getRecentC
 router.route('/getAllUsers').get(isAuthenticated,messageController.getAllUsers)
 router.route('/seen/:messageId').post(messageController.markMsgAsSeen)
 router.route('/seen/all/:receiverId').get(isAuthenticated,messageController.markAllMsgAsSeen)
+router.route('/getShareUsers').get(isAuthenticated,messageController.getShareUsers)
 
 export default router;

@@ -1,0 +1,86 @@
+.dialogBox .followersCount {
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.fullPostLikes {
+    position: absolute;
+}
+
+.fullPostCard .notifications {
+    margin-left: 0;
+}
+
+.fullPostCard .followersCount {
+    font-size: 0.8rem;
+}
+
+.fullPostCardLeft .fa-circle-xmark {
+    font-size: 1.5rem;
+}
+
+.fullPostCardLeft .suggestedUsername {
+    opacity: 1;
+    font-size: 0.8rem;
+}
+
+.fullPostCardLeft .notificationRightCorner {
+    right: unset;
+}
+
+.shareUserPhoto img {
+    height: 2.5rem;
+    width: 2.5rem;
+}
+
+.shareUserUsername {
+    font-family: Pacifico;
+}
+
+.shareCardContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    max-width: 30vw;
+}
+
+.shareHeading {
+    font-weight: bold;
+    font-size: 1.2rem;
+    /* border: 2px solid black; */
+    border-radius: 0.5rem;
+    padding: 0.3rem;
+    margin-bottom: 0.3rem;
+    /* width: 95%; */
+    text-align: center;
+}
+
+.shareWithFriends button {
+    font-weight: bold;
+    background-color: #0095F6;
+    color: white;
+    cursor: pointer;
+    border-radius: 1rem;
+    margin-left: 1rem;
+}
+
+.shareDialogBox {
+    padding: 0.5rem;
+    max-height: 50vh !important;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.shareDialogBox .chatOnlineCardLeft {
+    align-items: center;
+    flex-grow: 1;
+}
+
+@media only screen and (max-width: 767px) {
+.shareCardContainer{
+    max-width: none;
+}
+.shareDialogBox{
+    max-width: 400px;
+}
+}

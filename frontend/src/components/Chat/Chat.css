@@ -111,7 +111,14 @@
     width: 2.5rem;
     /* margin-right: 0.2rem; */
 }
-
+.mainUserMsg a{
+    color: white;
+    border-bottom: 2px solid white;
+}
+.otherUserMsg a{
+    color: black;
+    border-bottom: 2px solid black;
+}
 .chatRightCardLeft,
 .chatRightUserPhoto {
     display: flex;
