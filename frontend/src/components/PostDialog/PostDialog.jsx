@@ -10,7 +10,7 @@ import PostFunc from '../Post/PostFunc.js';
 
 
 
-const PostDialog = ({ handleDialog, user, post }) => {
+const PostDialog = ({ handleDialog, user, post,handleShareDialog }) => {
     const { posts } = useSelector(store => store.post)
     const dispatch = useDispatch()
     const apiUrl = useApi()
@@ -31,7 +31,7 @@ const PostDialog = ({ handleDialog, user, post }) => {
 
                 <div style={{ color: user.saved.includes(post._id) ? '#ED4956' : '#0095F6' }} onClick={() => { PostFunc.handleSavedPost(post._id, properties) }} className="dialogItem">{user.saved.includes(post._id) ? 'Remove from favourites' : 'Add to favourites'}</div>
 
-                <div className="dialogItem">Share</div>
+                <div onClick={handleShareDialog} className="dialogItem">Share</div>
 
                 {user._id === post.author._id && (
                     <div onClick={() => { PostDialogFunc.deletePost(post._id, properties) }} style={{ color: '#ED4956' }} className="dialogItem">Delete</div>

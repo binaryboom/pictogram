@@ -228,7 +228,7 @@ const FullPost = () => {
                         </div>
                     </div>
                 )} */}
-                {dialog && <PostDialog handleDialog={handleDialog} user={user} post={post} />}
+                {dialog && <PostDialog handleDialog={handleDialog} user={user} post={post} handleShareDialog={handleShareDialog} />}
                 {share && <Share closeDialog={handleShareDialog}  postId={post._id} customClass={'sharePage'}/>}
             </div>
             <div className="fullPostRightCorner">

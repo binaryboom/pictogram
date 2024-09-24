@@ -132,7 +132,7 @@ const Post = ({ post }) => {
                 )} */}
 
             {/* {showPicker &&<> <EmojiPicker onEmojiClick={addEmoji} skinTonesDisabled={true} style={{position:'absolute',left:'1vw',right:'1vw'}}  height={'80%'} width={'95%'} previewConfig={{showPreview:false}}/></>} */}
-            {dialog && <PostDialog handleDialog={handleDialog} user={user} post={post} />}
+            {dialog && <PostDialog handleShareDialog={handleShareDialog} handleDialog={handleDialog} user={user} post={post} />}
             {share && <Share closeDialog={handleShareDialog}  postId={post._id}  customClass={'sharePage'} />}
             {showLikes && <Friends fr={post.likes} closeDialog={handleLikes} heading={'Liked By :'} customClass={'no'}/>}
         </div>

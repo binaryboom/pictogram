@@ -111,9 +111,13 @@
     width: 2.5rem;
     /* margin-right: 0.2rem; */
 }
-.messageWrapper a{
+.mainUserMsg a{
     color: white;
-    /* text-decoration: underline; */
+    border-bottom: 2px solid white;
+}
+.otherUserMsg a{
+    color: black;
+    border-bottom: 2px solid black;
 }
 .chatRightCardLeft,
 .chatRightUserPhoto {
