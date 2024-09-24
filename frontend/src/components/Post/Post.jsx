@@ -13,6 +13,7 @@ import ProfileFunc from '../Profile/ProfileFunc.js'
 // import Picker from '@emoji-mart/react'
 import EmojiPicker from 'emoji-picker-react';
 import Friends from '../Profile/Friends.jsx'
+import Share from '../Share/Share.jsx'
 
 
 
@@ -21,6 +22,10 @@ const Post = ({ post }) => {
     const [showPicker, setShowPicker] = useState(false);
     const { posts } = useSelector(store => store.post)
     const { user } = useSelector(store => store.auth)
+    const [share, setShare] = useState(false);
+    function handleShareDialog(){
+        setShare(!share)
+    }
     const [loading, setLoading] = useState(false)
     const location = useLocation()
     const apiUrl = useApi();
@@ -92,7 +97,7 @@ const Post = ({ post }) => {
                 <div className="postCardLeft">
                     <i onClick={() => { PostFunc.likeUnlike(post._id, properties) }} style={{ color: post.likes.some(like => like._id === user._id) ? 'red' : '' }} className={`fa-heart ${post.likes.some(like => like._id === user._id) ? 'fa-solid' : 'fa-regular'} `} ></i>
                     <i onClick={() => { navigate(`/${post._id}`) }} className="fa-regular fa-comment"></i>
-                    <i className="fa-regular fa-share-from-square"></i>
+                    <i onClick={()=>{handleShareDialog()}} className="fa-regular fa-share-from-square"></i>
                 </div>
                 <div className="postCardRight">
                     <i onClick={() => { PostFunc.handleSavedPost(post._id, properties) }} className={`fa-bookmark ${user.saved.includes(post._id) ? 'fa-solid' : 'fa-regular'} `} ></i>
@@ -128,6 +133,7 @@ const Post = ({ post }) => {
 
             {/* {showPicker &&<> <EmojiPicker onEmojiClick={addEmoji} skinTonesDisabled={true} style={{position:'absolute',left:'1vw',right:'1vw'}}  height={'80%'} width={'95%'} previewConfig={{showPreview:false}}/></>} */}
             {dialog && <PostDialog handleDialog={handleDialog} user={user} post={post} />}
+            {share && <Share closeDialog={handleShareDialog}  postId={post._id}  customClass={'sharePage'} />}
             {showLikes && <Friends fr={post.likes} closeDialog={handleLikes} heading={'Liked By :'} customClass={'no'}/>}
         </div>
 

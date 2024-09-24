@@ -49,9 +49,9 @@ const sendMsg = async (receiverId, properties) => {
                     ...prev.filter((rc) => rc._id !== selectedChat._id),
                 ]);
             }
-else{
+            else {
                 setRecentChats((prev) => [
-                    { ...selectedChat},
+                    { ...selectedChat },
                     ...prev
                 ]);
             }
@@ -63,6 +63,7 @@ else{
         //   setLoading(false)
     }
 }
+
 const getAllMsg = async (receiverId, properties) => {
     const { apiUrl, setLoading, navigate, showAlert, dispatch, user, text, setText, setMessages } = properties;
     let res;
@@ -94,7 +95,7 @@ const getAllMsg = async (receiverId, properties) => {
 }
 
 const getRecentChats = async (properties) => {
-    const { apiUrl, setLoading, navigate, showAlert, dispatch, user, selectedChat, setRecentChats,setSelectedChat } = properties;
+    const { apiUrl, setLoading, navigate, showAlert, dispatch, user, selectedChat, setRecentChats, setSelectedChat } = properties;
     let res;
     // console.log('setRecentChats:', setRecentChats);
     try {
@@ -175,8 +176,8 @@ const getAllUsers = async (properties) => {
         }
     }
 }
-const seenAllMsg = async (receiverId,properties) => {
-    const { apiUrl,showAlert, dispatch, user, setAllUsers, selectedChat, allUsers,setMessages, setSelectedChat } = properties;
+const seenAllMsg = async (receiverId, properties) => {
+    const { apiUrl, showAlert, dispatch, user, setAllUsers, selectedChat, allUsers, setMessages, setSelectedChat } = properties;
     let res;
     try {
         // setLoading(true)
@@ -206,8 +207,8 @@ const seenAllMsg = async (receiverId,properties) => {
         //         }
         //         return prevMessages;
         //     });
-        
-            
+
+
         // }
         if (res.success) {
             const updatedMessages = res.updatedMessages;
@@ -216,10 +217,10 @@ const seenAllMsg = async (receiverId,properties) => {
                     return prevMessages.map((m) => {
                         const updatedMessage = updatedMessages.find((u) => u._id === m._id);
                         // Return a new object for each message with 'seen' set to true and updated 'seenBy' if found
-                        return { 
-                            ...m, 
-                            seen: true, 
-                            seenBy: updatedMessage ? updatedMessage.seenBy : m.seenBy 
+                        return {
+                            ...m,
+                            seen: true,
+                            seenBy: updatedMessage ? updatedMessage.seenBy : m.seenBy
                         };
                     });
                 }

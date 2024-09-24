@@ -111,7 +111,7 @@ const markMsgAsSeen = async (req, res) => {
         const senderId = req.body.mainUserId;
         const receiverId = req.body.otherUserId;
         const messageId = req.params.messageId;
-        console.log('mmas',senderId,receiverId)
+        console.log('mmas', senderId, receiverId)
         const conversation = await Conversation.findOne({
             participaints: { $all: [receiverId, senderId] },
             message: { $in: [messageId] }
@@ -190,7 +190,7 @@ const markAllMsgAsSeen = async (req, res) => {
 
     }
 }
-const getAllUsers = async (req, res) => {
+const getAllUsers = async (req, res, skipResponse = false) => {
     try {
         const senderId = req.id;
         const allUsers = await User.findById(senderId)
@@ -208,31 +208,36 @@ const getAllUsers = async (req, res) => {
 
         // Convert the map values back to an array
         const uniqueUsers = Array.from(uniqueUsersMap.values());
-
-        if (!allUsers) {
+        if (skipResponse===true) {
+            return { allUsers: uniqueUsers }; // Return users when response is skipped
+        } 
+        else {
+            if (!allUsers) {
+                return res.status(200).json({
+                    success: false,
+                    message: 'No users !!',
+                });
+            }
             return res.status(200).json({
-                success: false,
-                message: 'No users !!',
+                success: true,
+                message: 'Users Found!!',
+                allUsers: uniqueUsers
+    
             });
         }
-        return res.status(200).json({
-            success: true,
-            message: 'Users Found!!',
-            allUsers: uniqueUsers
-
-        });
     } catch (error) {
         console.log(error);
-        return res.status(500).json({
-            success: false,
-            message: 'Server Error !!'
-        });
+        if (skipResponse===true) {
+            throw error;
+        } else {
+            return res.status(500).json({ success: false, message: 'Server Error !!' });
+        }
 
     }
 
 }
 
-const getRecentChats = async (req, res) => {
+const getRecentChats = async (req, res, skipResponse = false) => {
     try {
         const userId = req.id; // Assuming you have the user's ID from the auth middleware
 
@@ -258,15 +263,54 @@ const getRecentChats = async (req, res) => {
                 uniqueUsers.push(otherUser);
             }
         });
-        res.status(200).json({
+
+        if (skipResponse===true) {
+            return { users: uniqueUsers }; // Return users when response is skipped
+        } else {
+            return res.status(200).json({
+                success: true,
+                users: uniqueUsers
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        if (skipResponse===true) {
+            throw error;
+        } else {
+            return res.status(500).json({ success: false, message: 'Unable to fetch recent chats.' });
+        }
+    }
+
+}
+const getShareUsers = async (req, res) => {
+    try {
+        // Call getRecentChats and getAllUsers without sending responses inside them
+        const recentChatsPromise = getRecentChats(req, res, true); // Pass a flag to avoid sending a response
+        const allUsersPromise = getAllUsers(req, res, true); // Same here
+
+        // Wait for both results to resolve
+        const [recentChats, allUsers] = await Promise.all([recentChatsPromise, allUsersPromise]);
+
+        // Combine results from recent chats and all users
+        const combinedUsers = [...recentChats.users, ...allUsers.allUsers];
+
+        // Filter unique users
+        const uniqueUsersMap = new Map();
+        combinedUsers.forEach(user => {
+            uniqueUsersMap.set(user._id.toString(), user);
+        });
+        const uniqueUsers = Array.from(uniqueUsersMap.values());
+
+        // Send the combined response
+        return res.status(200).json({
             success: true,
+            message: 'Users found!',
             users: uniqueUsers
         });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ success: false, message: 'Unable to fetch recent chats.' });
+        return res.status(500).json({ success: false, message: 'Unable to fetch users' });
     }
-
 }
 
 // async function addSeen() {
@@ -308,7 +352,8 @@ const messageController = {
     getRecentChats,
     getAllUsers,
     markMsgAsSeen,
-    markAllMsgAsSeen
+    markAllMsgAsSeen,
+    getShareUsers
 }
 
 export default messageController;

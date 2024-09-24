@@ -10,7 +10,8 @@ import PostFunc from '../Post/PostFunc'
 import { formatDistanceToNow ,formatDistanceToNowStrict } from 'date-fns';
 import PostDialogFunc from '../PostDialog/PostDialogFunc'
 import Friends from '../Profile/Friends'
-
+import Share from '../Share/Share'
+import Linkify from 'react-linkify';
 
 
 const FullPost = () => {
@@ -43,6 +44,10 @@ const FullPost = () => {
     const { posts } = useSelector(store => store.post)
     const [post, setPost] = useState(null);
     const [comments, setComments] = useState([]);
+    const [share, setShare] = useState(false);
+    function handleShareDialog(){
+        setShare(!share)
+    }
     function handleFullPost(newPost, newComments) {
         if (newPost) {
             setPost(newPost)
@@ -172,7 +177,7 @@ const FullPost = () => {
                         <div className="postCardLeft">
                             <i onClick={() => { PostFunc.likeUnlike(post._id, properties) }} style={{ color: post.likes.some(like => like._id === user._id) ? 'red' : '' }} className={`fa-heart ${post.likes.some(like => like._id === user._id) ? 'fa-solid' : 'fa-regular'} `} ></i>
                             {/* <i className="fa-regular fa-comment"></i> */}
-                            <i className="fa-regular fa-share-from-square"></i>
+                            <i onClick={()=>{handleShareDialog()}} className="fa-regular fa-share-from-square"></i>
                         </div>
                         <div className="postCardRight">
                             <i onClick={() => { PostFunc.handleSavedPost(post._id, properties) }} className={`fa-bookmark ${user.saved.includes(post._id) ? 'fa-solid' : 'fa-regular'} `} ></i>
@@ -195,7 +200,7 @@ const FullPost = () => {
 
                                 </div>
                                 <div className="itemRight">
-                                    <div className="commentUserText">{c.text}</div>
+                                    <div className="commentUserText"><Linkify>{c.text}</Linkify></div>
                                 </div>
                             </div>
                         ))}
@@ -224,6 +229,7 @@ const FullPost = () => {
                     </div>
                 )} */}
                 {dialog && <PostDialog handleDialog={handleDialog} user={user} post={post} />}
+                {share && <Share closeDialog={handleShareDialog}  postId={post._id} customClass={'sharePage'}/>}
             </div>
             <div className="fullPostRightCorner">
                 <i onClick={() => { navigate(-1) }} className="fa-regular fa-2xl fa-circle-xmark"></i>

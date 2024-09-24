@@ -111,7 +111,10 @@
     width: 2.5rem;
     /* margin-right: 0.2rem; */
 }
-
+.messageWrapper a{
+    color: white;
+    /* text-decoration: underline; */
+}
 .chatRightCardLeft,
 .chatRightUserPhoto {
     display: flex;
