@@ -150,7 +150,7 @@ const Share = ({ closeDialog, customClass, postId }) => {
                                 </div>
                                 <div className="shareUserUsername">
                                     {user.username}
-                                    {user.isVerified === 'true' && <abbr title="Verified"><img className="chatBlueTick" src="/verified.png" alt="Verified" /></abbr>}
+                                    {user.isVerified && <abbr title="Verified"><img className="chatBlueTick" src="/verified.png" alt="Verified" /></abbr>}
                                 </div>
                             </div>
 
