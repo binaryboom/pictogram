@@ -92,7 +92,7 @@ const Search = ({ handleSearch }) => {
                 </div>
 
                 <div className="suggestedUserUsername">{n?.username}</div>
-                {n?.isVerified && <div className="postBlueTick"><abbr title="Founder (Pictogram)"><img src="/verified.png" alt="" /></abbr></div>}
+                {n.isVerified && <div className="postBlueTick"><abbr title="Founder (Pictogram)"><img src="/verified.png" alt="" /></abbr></div>}
               </div>
 
               {n?.bio.trim().length > 0 && <div className="itemBottom">
