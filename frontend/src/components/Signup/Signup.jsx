@@ -58,7 +58,7 @@ const Signup = () => {
       showAlert(res)
     }
     finally {
-      res.success ? (reset(), navigate('/login', { state: data.email })) : null
+      res.success ? (reset(), navigate('/login', { state: data })) : null
       showAlert(res)
       setLoading(false)
     }

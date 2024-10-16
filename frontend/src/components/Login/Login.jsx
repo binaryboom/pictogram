@@ -35,7 +35,8 @@ const Login = () => {
       navigate('/')
     }
     if (data) {
-      setValue('usernameEmail', data);
+      setValue('usernameEmail', data.email);
+      setValue('password', data.password);
     }
   },[])
   

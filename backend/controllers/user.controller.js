@@ -98,7 +98,7 @@ const login = async (req, res) => {
         //     posts:user.posts
         // }
         const token = jwt.sign({ userId: user._id }, process.env.SecretKey, { expiresIn: '1d' });
-        return res.cookie('token', token, { httpOnly: true, sameSite: 'strict', maxAge: 1 * 24 * 60 * 60 * 1000 }).json({
+        return res.cookie('token', token, { httpOnly: true, sameSite: 'strict', maxAge: 31 * 24 * 60 * 60 * 1000 }).json({
             success: true,
             message: `Welcome Back ${user.username} !!`,
             user
