@@ -5,6 +5,55 @@ import User from '../models/user.model.js'
 import Comment from '../models/comment.model.js'
 import mongoose from "mongoose";
 import { getReceiverSocketId, io } from "../socket/socket.js";
+// Default
+import Groq from "groq-sdk";
+
+const groq = new Groq({ apiKey: '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' });
+// const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+
+async function getCommentModeration(text) {
+    const completion = await groq.chat.completions
+        .create({
+            messages: [
+                {
+                    role: "user",
+                    content: text + '\nrate above comment as positive,negative or  neutral . return only 1 if positive or neutral or 0 if negative . dont say anything else.',
+                },
+            ],
+            model: "llama3-8b-8192",
+        })
+        .then((chatCompletion) => {
+            let res = chatCompletion.choices[0]?.message?.content || "";
+            console.log(res);
+            return res;
+        });
+}
+
+async function getCommentModeration2(text) {
+    try {
+        const completion = await groq.chat.completions.create({
+            messages: [
+                {
+                    role: "user",
+                    // content: text + '\nrate above comment as positive,negative or  neutral . return only 1 if positive or neutral or 0 if negative . dont say anything else',
+                    // content: 'Please analyze the following comment and return 0 if the sentiment is negative. If the sentiment is positive or neutral, return 1. dont say anything else Here is the comment : ' + text ,
+                    content: 'Classify the comment (1 for positive/neutral/little negative or little spam, 0 for spam or extremely negative) . dont say anything else. here is comment : ' + text ,
+                },
+            ],
+            model: "llama-3.1-8b-instant",
+        });
+
+        const res = completion.choices[0]?.message?.content.trim() || "";
+        console.log(res);
+        return res;
+    } catch (error) {
+        console.error("Error fetching comment moderation:", error);
+        return null;  // or handle the error as needed
+    }
+}
+
+// let ttext='gavar kahi ke'
+// getCommentModeration(ttext);
 
 const handleError = (res, statusCode, message) => {
     return res.status(statusCode).json({
@@ -314,7 +363,15 @@ const addComment = async (req, res) => {
                 message: 'Text is required !!'
             });
         }
-        const user=await User.findById(mainUser).select('_id username profilePicture isVerified')
+       let cmod=await getCommentModeration2(text);
+       console.log('cmod',cmod)
+       if( cmod== 0 || cmod=='' || cmod==null){
+         return res.status(400).json({
+            success: false,
+            message: 'Hateful speech / Spam detected !!'
+        });
+       }
+        const user = await User.findById(mainUser).select('_id username profilePicture isVerified')
         const post = await Post.findById(postId);
         const comment = await Comment.create({
             text,
@@ -340,7 +397,7 @@ const addComment = async (req, res) => {
                 type: 'comment',
                 user,
                 postId,
-                commentId:comment._id,
+                commentId: comment._id,
                 message: ` commented on your post`
             }
             const postAuthorSocketId = getReceiverSocketId(post.author.toString())
