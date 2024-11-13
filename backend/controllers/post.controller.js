@@ -392,7 +392,7 @@ const addComment = async (req, res) => {
                 },
                 options: { sort: { createdAt: -1 } } // Use the 'options' field to specify sorting
             })
-        if (post.author.toString() !== mainUser._id) {
+        if (post.author.toString() !== mainUser) {
             const notification = {
                 type: 'comment',
                 user,
